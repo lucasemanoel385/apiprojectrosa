@@ -33,7 +33,6 @@ public class ItemContract {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long idItem;
-	private String urlImg;
 	private Long cod;
 	private String name;
 	private double valueItemContract;
@@ -68,7 +67,6 @@ public class ItemContract {
 	public ItemContract(Item item, double value, LocalDate dataInicio, LocalDate dataFinal, SituacaoContrato situacaoContrato) {
 		this.cod = item.getCod();
 		this.idItem = item.getId();
-		this.urlImg = item.getUrlimg();
 		this.name = item.getName();
 		this.valueItemContract = item.getValueItem();
 		this.replacementValue = item.getReplacementValue();

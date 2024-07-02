@@ -1,14 +1,13 @@
 package br.com.rosa.domain.companyData;
 
 import br.com.rosa.domain.companyData.dto.DataCompany;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.sql.Blob;
 
 @Entity
 @Data
@@ -19,7 +18,8 @@ public class CompanyData {
 
     @Id
     private Long id;
-    private String urlImg;
+    @Lob
+    private byte[] img;
     private String reason;
     private String fantasyName;
     private String cnpj;
@@ -34,9 +34,9 @@ public class CompanyData {
     private String clauses;
     private String observation;
 
-    public CompanyData(DataCompany data, String urlimg) {
+    public CompanyData(DataCompany data, byte[] img) {
         this.id = 1l;
-        this.urlImg = urlimg;
+        this.img = img;
         this.reason = data.reason();
         this.fantasyName = data.fantasyName();
         this.cnpj = data.cnpj();

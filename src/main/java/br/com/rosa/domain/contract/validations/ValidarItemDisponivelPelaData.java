@@ -24,7 +24,9 @@ public class ValidarItemDisponivelPelaData implements ValidadorContratoAluguel {
 	@Override
 	public void validar(List<ItemContract> listItens) {
 		var contract = new Contract();
+
 		for (int i = 0; i < listItens.size(); i++) {
+
 			// Usar a query do existe nessa de encontrar os itens
 			var itemData = repositoryItemContrato.quantityItemsDate(listItens.get(i).getIdItem(),
 					listItens.get(i).getStartDate().minusDays(2l), listItens.get(i).getFinalDate().plusDays(2l), SituacaoContrato.RESERVADO);
@@ -47,6 +49,18 @@ public class ValidarItemDisponivelPelaData implements ValidadorContratoAluguel {
 			}
 			itemEstoque.setAmount(itemRetorno);
 
+		}
+
+		for (ItemContract itemContract : contract.getItens()) {
+			var itensRepetidos = 0;
+			for (ItemContract listItem : listItens) {
+				if (itemContract.getIdItem().equals(listItem.getIdItem())) {
+					itensRepetidos++;
+				}
+			}
+			if (itensRepetidos > 1) {
+				throw new ValidacaoException("Itens iguais, favor remover o item duplicado.");
+			}
 		}
 
 	}

@@ -31,7 +31,7 @@ public class Item {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long cod;
-	private String urlimg;
+	private byte[] img;
 	private String name;
 	private double valueItem;
 	private double replacementValue;
@@ -41,8 +41,8 @@ public class Item {
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Category category;
 	
-	public Item(ItemCadastro dados, Long idCategory, String url) {
-		this.urlimg = url;
+	public Item(ItemCadastro dados, Long idCategory, byte[] img) {
+		this.img = img;
 		this.cod = (long) dados.cod();
 		this.name = dados.name();
 		this.valueItem = dados.value();

@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import br.com.rosa.domain.CreateReadImage;
+import br.com.rosa.domain.TransformeAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategoria;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import br.com.rosa.infra.exceptions.NullPointerException;
@@ -71,10 +71,10 @@ public class ItemService {
 			throw new NullPointerException("Imagem não selecionada");
 		}
 
-		CreateReadImage.saveImgItem(file);
+		var imgBytes = TransformeAndResizeImage.saveImgItem(file);
 		
 		//Salva o item no banco de dados
-		var item = new Item(dados, category.getId(), file.getOriginalFilename().toLowerCase());
+		var item = new Item(dados, category.getId(), imgBytes);
 		repository.save(item);
 		return item;
 	}
@@ -83,13 +83,13 @@ public class ItemService {
 	public DadosItem getItemId(Long id) {
 		var item = repository.getReferenceById(id);
 
-		var base64Image = CreateReadImage.takeImage(item.getUrlimg());
+		var base64Image = TransformeAndResizeImage.takeImage(item.getImg());
 
 		DadosItem i = new DadosItem(item, base64Image);
 
 		return i;
 	}
-	
+
 	public Page<DadosItem> listItens(Pageable page, String search) {
 
 		List<DadosItem> listItens = new ArrayList<>();
@@ -126,7 +126,7 @@ public class ItemService {
 		items.forEach(item -> {
 
 			//Pega a imagem da pasta com a ulr salva no banco de dados
-			var base64Image = CreateReadImage.takeImage(item.getUrlimg());
+			var base64Image = TransformeAndResizeImage.takeImage(item.getImg());
 
 			//Criamos a instancia do DTO(Record) e adicionamos na lista
 			DadosItem i = new DadosItem(item, base64Image);
@@ -142,7 +142,7 @@ public class ItemService {
 		return pagina;
 	}
 
-	public Page<DadosItem> listAllItens(Pageable page) {
+	/*public Page<DadosItem> listAllItens(Pageable page) {
 
 		//Puxar os itens
 		var itens = repository.findAll(Sort.by("name"));
@@ -166,14 +166,14 @@ public class ItemService {
 		System.out.println(start + "||" +page.getOffset()+ "||" + listItens.size() + "||"+ end);
 		return pagina;
 
-	}
+	}*/
 
-	
+
 	public Item updateItem(AtualizarItem dados, MultipartFile file) {
 
-		validate.validateRegisterItem(0l, dados.category(), dados.name());
-		
 		var item = repository.getReferenceById(dados.id());
+
+		validate.validateUpdateItem(0l, dados, item);
 
 		if (item.getCod() != dados.cod() && repository.existsByCod(dados.cod())){
 			throw new SqlConstraintViolationException("Código do produto já existe");
@@ -182,27 +182,15 @@ public class ItemService {
 		checkAndUpdateNullorBlank(item, dados);
 
 		if(!(file == null)) {
-			CreateReadImage.deleteImg(item.getUrlimg());
-			item.setUrlimg(CreateReadImage.saveImgItem(file));
+			item.setImg(TransformeAndResizeImage.saveImgItem(file));
 		}
 
 		repository.save(item);
 
 		return item;
-		
-	}
-	
-	public void deleteItem(Long id) {
-		var item = repository.getReferenceById(id);
-
-		CreateReadImage.deleteImg(item.getUrlimg());
-		//Files.delete(Paths.get(destinationFolder + item.getUrlimg()));
-
-		
-		repository.deleteById(id);
 
 	}
-	
+
 	private void checkAndUpdateNullorBlank(Item item, AtualizarItem data) {
 
 		if(data.name() != null || data.name() != "") {
@@ -278,7 +266,7 @@ public class ItemService {
 
 		return base64Image;
 	}
-	
+
 	private static BufferedImage resizeImage(BufferedImage imageOriginal, int width, int height) {
         Image resizedImage = imageOriginal.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

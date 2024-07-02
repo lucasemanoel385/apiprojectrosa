@@ -5,7 +5,9 @@ import br.com.rosa.domain.contract.Contract;
 import br.com.rosa.domain.contract.RepositoryContrato;
 import br.com.rosa.domain.contract.enunm.SituacaoContrato;
 import br.com.rosa.domain.contract.validations.ValidadorContratoAluguel;
+import br.com.rosa.domain.item.Item;
 import br.com.rosa.domain.item.RepositoryItem;
+import br.com.rosa.domain.item.dto.AtualizarItem;
 import br.com.rosa.domain.itemContract.ItemContract;
 import br.com.rosa.domain.itemContract.RepositoryItemContrato;
 import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
@@ -39,6 +41,24 @@ public class ValidateIfExists  {
 		if (repository.existsByName(nameItem)) {
 			throw new SqlConstraintViolationException("Nome do produto já cadastrado");
 		}
+	}
+
+	public void validateUpdateItem(Long codItem, AtualizarItem data, Item item) {
+
+		if (codItem != 0) {
+			if (repository.existsByCod(codItem)) {
+				throw new SqlConstraintViolationException("Código do produto já existe");
+			}
+		}
+
+		if (!repositoryCategory.existsByName(data.category())) {
+			throw new SqlConstraintViolationException("Categoria não foi criada");
+		}
+
+		if (!data.name().equals(item.getName()) && repository.existsByName(data.name())) {
+			throw new SqlConstraintViolationException("Nome do produto já cadastrado");
+		}
+
 	}
 
 

@@ -39,7 +39,7 @@ public class ContratoController {
 	@Autowired
 	private ContratoService service;
 	
-	
+
 	@PostMapping
 	@Transactional
 	public ResponseEntity<DadosContrato> registerContract(@RequestBody @Valid ContratoCadastro dados, UriComponentsBuilder uriBuilder) throws Exception {
@@ -48,7 +48,7 @@ public class ContratoController {
 		var uri = uriBuilder.path("/contrato/{id}").buildAndExpand(contrato.id()).toUri();
 		return ResponseEntity.created(uri).body(contrato);
 	}
-	
+
 	@GetMapping
 	public ResponseEntity<Page<ListContract>> getAllContract(
 			@PageableDefault(page = 0, size = 5, sort = "start_date" ,direction = Sort.Direction.ASC) Pageable page,
@@ -63,8 +63,8 @@ public class ContratoController {
 			return ResponseEntity.ok(repositoryContract.findAll(page).map(ListContract::new));
 		} else {
 			return ResponseEntity.ok(repositoryContract.findAllByIdOrByClientNameOrByClientCpf(search, page).map(ListContract::new));
-		}*/
-		//return service.listarContrato(page);
+		}
+		//return service.listarContrato(page);*/
 
 	}
 
@@ -144,15 +144,6 @@ public class ContratoController {
 
 	}
 
-	
-	/*@PutMapping
-	@Transactional
-	public void updateContract(@RequestBody AtualizarContrato dados) {
-		
-		service.alterarContrato(dados);
-
-	}*/
-	
 	@DeleteMapping("itemContrato/{id}")
 	@Transactional
 	public ResponseEntity deleteItemContract(@PathVariable Long id) {
@@ -161,9 +152,9 @@ public class ContratoController {
 	//	contrato.setItens(itens);
 		repositoryItemContrato.deleteById(id);
 		return ResponseEntity.noContent().build();
-		
+
 	}
-	
+
 	@PatchMapping("situation")
 	@Transactional
 	public ResponseEntity updateSituationContrato(@RequestBody @Valid UpdateSituationContract data) {
@@ -171,7 +162,7 @@ public class ContratoController {
 		service.changeSituationContract(data);
 
 		return ResponseEntity.ok().build();
-		
+
 //		Contrato contrato = repository.getReferenceById(dados.contratoId());
 //
 //		if (SituacaoContrato.RESERVADO == dados.situacaoContrato()) {
@@ -191,17 +182,17 @@ public class ContratoController {
 //				itemEstoque.setQuantidade(itemRetorno);
 //			}
 //		}
-//		
+//
 //		repository.save(contrato);
 
 	}
-	
+
 	@DeleteMapping("{id}")
 	@Transactional
 	public ResponseEntity deleteContract(@PathVariable Long id) {
 		repositoryContract.deleteById(id);
 		return ResponseEntity.noContent().build();
-		
+
 	}
 	
 

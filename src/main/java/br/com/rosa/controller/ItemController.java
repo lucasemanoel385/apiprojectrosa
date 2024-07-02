@@ -1,5 +1,6 @@
 package br.com.rosa.controller;
 
+import br.com.rosa.domain.TransformeAndResizeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,15 +85,14 @@ public class ItemController {
 
 		var item = service.updateItem(dados, file);
 		
-		return ResponseEntity.ok().body(new DadosItem(item, item.getUrlimg()));
+		return ResponseEntity.ok().body(new DadosItem(item, TransformeAndResizeImage.takeImage(item.getImg())));
 		
 	}
 	
 	@DeleteMapping("{id}")
 	@Transactional
 	public ResponseEntity<Page<DadosItem>> deleteItem(@PathVariable Long id) {
-		System.out.println(id);
-		service.deleteItem(id);
+		repository.deleteById(id);
 		return ResponseEntity.noContent().build();
 		
 	}

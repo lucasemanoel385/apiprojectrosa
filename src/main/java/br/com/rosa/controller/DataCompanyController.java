@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("data-company")
 public class DataCompanyController {
@@ -50,7 +52,7 @@ public class DataCompanyController {
 	
 	@PutMapping
 	@Transactional
-	public ResponseEntity registerItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "dataCompany") DataCompany data, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity registerItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "dataCompany") DataCompany data, UriComponentsBuilder uriBuilder) throws IOException {
 		
 		service.createOrUpdateData(file, data);
 

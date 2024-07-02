@@ -68,11 +68,11 @@ public class Client extends Pessoa{
 			super.getAddress().setNumber(data.number());
 			//super.setAddrees(new Endereco(dados.endereco()));
 		}
-		if(data.phone1() != null && !this.getPhone1().equals(data.phone1())) {
+		if(data.phone1() != null) {
 			super.setPhone1(data.phone1());
 		}
 
-		if(data.phone2() != null && !this.getPhone2().equals(data.phone2())) {
+		if(data.phone2() != null) {
 			super.setPhone2(data.phone2());
 		}
 

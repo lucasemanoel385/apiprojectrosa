@@ -9,12 +9,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import br.com.rosa.domain.CreateReadImage;
+import br.com.rosa.domain.TransformeAndResizeImage;
 import br.com.rosa.domain.contract.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import br.com.rosa.domain.contract.Contract;
@@ -53,24 +50,24 @@ public class ContratoService {
 		repository.save(contract);
 
 		List<DataItemsContract> itemsContract = new ArrayList<>();
-
 		contract.getItens().forEach((i) -> {
+			var blobImg = repositoryItem.getReferenceById(i.getIdItem());
 			itemsContract.add(new DataItemsContract(i.getIdItem(), i.getCod(), i.getName(),
 					i.getAmount(), i.getValueItemContract(),
-					i.getValueTotalItem(), i.getReplacementValue(), CreateReadImage.takeImage(i.getUrlImg())));
+					i.getValueTotalItem(), i.getReplacementValue(), TransformeAndResizeImage.takeImage(blobImg.getImg())));
 		});
 
 		return new DadosContrato(contract, itemsContract);
 
 	}
 	
-	public ResponseEntity<Page<ListContract>> listarContrato(Pageable page) {
+	/*public ResponseEntity<Page<ListContract>> listarContrato(Pageable page) {
 
 		var lista = repository.findAll(page).map(ListContract::new);
 		System.out.println(lista);
 		return ResponseEntity.ok(lista);
 
-	}
+	}*/
 
 	public DadosContrato getContractId(Long id) {
 
@@ -79,9 +76,10 @@ public class ContratoService {
 		List<DataItemsContract> itemsContract = new ArrayList<>();
 
 		contract.getItens().forEach((i) -> {
+			var blobImg = repositoryItem.getReferenceById(i.getIdItem());
 			itemsContract.add(new DataItemsContract(i.getIdItem(), i.getCod(), i.getName(),
 					i.getAmount(), i.getValueItemContract(),
-					i.getValueTotalItem(), i.getReplacementValue(), CreateReadImage.takeImage(i.getUrlImg())));
+					i.getValueTotalItem(), i.getReplacementValue(), TransformeAndResizeImage.takeImage(blobImg.getImg())));
 		});
 
 		return new DadosContrato(contract, itemsContract);
