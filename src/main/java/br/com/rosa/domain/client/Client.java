@@ -45,6 +45,18 @@ public class Client extends Pessoa{
 	}
 	
 	public void atualizarInformacoes(UpdateClient data) {
+		if(data.nameReason() != null && !this.getNameReason().equals(data.nameReason())) {
+			this.setNameReason(data.nameReason());
+		}
+		if(data.cpfCnpj() != null && !this.getCpfCnpj().equals(data.cpfCnpj())) {
+			this.setCpfCnpj(data.cpfCnpj());
+		}
+		if(data.rgStateRegistration() != null && !this.getRgStateRegistration().equals(data.rgStateRegistration())) {
+			this.setRgStateRegistration(data.rgStateRegistration());
+		}
+		if(data.dateBirthCompanyFormation() != null && !this.getDateBirthCompanyFormation().equals(data.dateBirthCompanyFormation())) {
+			this.setDateBirthCompanyFormation(data.dateBirthCompanyFormation());
+		}
 		if(data.email() != null && !this.getEmail().equals(data.email())) {
 			super.setEmail(data.email());
 		}

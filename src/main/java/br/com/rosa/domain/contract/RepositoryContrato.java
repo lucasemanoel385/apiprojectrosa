@@ -13,7 +13,7 @@ public interface RepositoryContrato extends JpaRepository<Contract, Long>{
 	@Query(value = "select * from contract where data_inicio = :dataInicio and data_final = :dataFinal", nativeQuery = true)
 	List<Contract> findAllData(LocalDate dataInicio, LocalDate dataFinal);
 
-	@Query(value = "select c.id, c.client_id, c.contact_phone, c.date_contract, c.start_date, c.final_date, c.discount, c.value, \n" +
+	@Query(value = "select c.id, c.client_id, c.date_contract, c.start_date, c.final_date, c.discount, c.value, \n" +
 			"c.value_total, c.contract_situation, c.seller, c.observation, c.annotations\n" +
 			"from contract c LEFT JOIN client cl ON c.client_id = cl.id where cl.name_reason like :search% or cl.cpf_cnpj like :search% or c.id like :search%", nativeQuery = true)
     Page<Contract> findAllByIdOrByClientNameOrByClientCpf(String search, Pageable page);

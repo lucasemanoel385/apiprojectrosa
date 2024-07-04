@@ -1,5 +1,6 @@
 package br.com.rosa.controller;
 
+import br.com.rosa.domain.categoryItem.Category;
 import br.com.rosa.domain.categoryItem.dto.UpdateCategory;
 import br.com.rosa.domain.categoryItem.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,14 @@ public class CategoriaController {
 
 		}
 		
+	}
+
+	@GetMapping("all")
+	public ResponseEntity<Page<DadosCategoria>> getAllCategory(
+			@PageableDefault(page = 0, size = 10000, sort = "name" ,direction = Sort.Direction.ASC) Pageable page) {
+
+		return ResponseEntity.ok(repository.findAll(page).map(DadosCategoria::new));
+
 	}
 
 	@GetMapping("{id}")
