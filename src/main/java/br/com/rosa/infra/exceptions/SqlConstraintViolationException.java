@@ -7,8 +7,8 @@ public class SqlConstraintViolationException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public SqlConstraintViolationException(String mensagem) {
-		super(mensagem);
+	public SqlConstraintViolationException(String message) {
+		super(message);
 	}
 
 }

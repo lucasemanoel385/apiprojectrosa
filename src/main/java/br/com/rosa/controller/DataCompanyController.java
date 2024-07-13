@@ -3,25 +3,17 @@ package br.com.rosa.controller;
 import br.com.rosa.domain.companyData.RepositoryDataCompany;
 import br.com.rosa.domain.companyData.dto.DataAccounting;
 import br.com.rosa.domain.companyData.dto.DataCompany;
+import br.com.rosa.domain.companyData.dto.DtoCommissionEmployee;
 import br.com.rosa.domain.companyData.dto.GetDataCompany;
 import br.com.rosa.domain.companyData.service.DataCompanyService;
-import br.com.rosa.domain.contract.RepositoryContrato;
+import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.domain.expenses.Expenses;
 import br.com.rosa.domain.expenses.RepositoryExpenses;
 import br.com.rosa.domain.expenses.dto.DataExepenses;
-import br.com.rosa.domain.item.RepositoryItem;
-import br.com.rosa.domain.item.dto.AtualizarItem;
-import br.com.rosa.domain.item.dto.DadosItem;
-import br.com.rosa.domain.item.dto.ItemCadastro;
-import br.com.rosa.domain.item.service.ItemService;
 import br.com.rosa.domain.paymentContract.RepositoryPayment;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("data-company")
@@ -45,7 +40,7 @@ public class DataCompanyController {
 	private RepositoryExpenses expensesRepository;
 
 	@Autowired
-	private RepositoryContrato contractRepository;
+	private RepositoryContract contractRepository;
 
 	@Autowired
 	private RepositoryPayment paymentRepository;
@@ -101,20 +96,7 @@ public class DataCompanyController {
 	@GetMapping("accounting/{month}")
 	public ResponseEntity<DataAccounting> getDataAccountig(@PathVariable String month) {
 
-		var y = month.substring(0, 4);
-		var m = month.substring(5, 7);
-		var yearMonth = y + "-" + m;
-		var sumPaymentsMonth = paymentRepository.sumPaymentContainsMonth(yearMonth);
-		var sumPaymentsYear = paymentRepository.sumPaymentContainsYear(y);
-
-		var valueExpensesMonth = expensesRepository.sumValueContainsMonth(yearMonth);
-		var valueExpensesYear = expensesRepository.sumValueContainsYear(y);
-
-
-		var listExpenses = expensesRepository.findAllContainsMonth(yearMonth);
-
-		var dtoAnalysisAll = new DataAccounting(sumPaymentsMonth, sumPaymentsYear, valueExpensesMonth, valueExpensesYear, listExpenses);
-
+		var dtoAnalysisAll = service.dataAccouting(month);
 		return ResponseEntity.ok(dtoAnalysisAll);
 	}
 

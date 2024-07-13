@@ -3,12 +3,12 @@ package br.com.rosa.infra.exceptions;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 //RestControllerAdvice fala pro spring que é essa classe que vai tratar os erros da API
@@ -28,7 +28,12 @@ public class TratadorDeErros {
 		var erros = ex.getFieldErrors();
 
 												//erros me da uma stream e mape-e cada objeto field erro para um objeto erro validacao e me devolvendo uma lista
-		return ResponseEntity.badRequest().body(erros.get(0).getDefaultMessage());
+		return ResponseEntity.badRequest().body(erros.stream().map(DataErrorNotNull::new).toList());
+	}
+
+	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+	public ResponseEntity ErrorNullColumnBDD(SQLIntegrityConstraintViolationException ex) {
+		return ResponseEntity.status(400).body(ex.getMessage());
 	}
 	
 	@ExceptionHandler(ValidacaoException.class)
@@ -54,12 +59,19 @@ public class TratadorDeErros {
 	public ResponseEntity tratarErroAutenticacao(UnexpectedTypeException ex) {
 		return ResponseEntity.status(400).body(ex.getMessage());
 	}
-	
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity tratarErroAutenticacao(HttpMessageNotReadableException ex) {
+		return ResponseEntity.status(400).body(ex.getMessage());
+	}
+
+
 	//Criamos essa DTO pq só vai ser usada aqui
-	/*private record DadosErrosValidacaoCadastroVideo(String error) {
-		public DadosErrosValidacaoCadastroVideo(FieldError erro) {
-			this(erro.getDefaultMessage());
+	public record DataErrorNotNull(String field, String message) {
+		public DataErrorNotNull(FieldError error) {
+
+			this(error.getField(), error.getDefaultMessage());
 		}
-	}*/
+	}
 	
 }

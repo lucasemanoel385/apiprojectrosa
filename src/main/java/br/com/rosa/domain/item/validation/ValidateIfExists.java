@@ -1,21 +1,12 @@
 package br.com.rosa.domain.item.validation;
 
-import br.com.rosa.domain.categoryItem.RepositoryCategoria;
-import br.com.rosa.domain.contract.Contract;
-import br.com.rosa.domain.contract.RepositoryContrato;
-import br.com.rosa.domain.contract.enunm.SituacaoContrato;
-import br.com.rosa.domain.contract.validations.ValidadorContratoAluguel;
+import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.Item;
 import br.com.rosa.domain.item.RepositoryItem;
-import br.com.rosa.domain.item.dto.AtualizarItem;
-import br.com.rosa.domain.itemContract.ItemContract;
-import br.com.rosa.domain.itemContract.RepositoryItemContrato;
+import br.com.rosa.domain.item.dto.UpdateItem;
 import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
-import br.com.rosa.infra.exceptions.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ValidateIfExists  {
@@ -24,7 +15,7 @@ public class ValidateIfExists  {
 	private RepositoryItem repository;
 
 	@Autowired
-	private RepositoryCategoria repositoryCategory;
+	private RepositoryCategory repositoryCategory;
 	
 	public void validateRegisterItem(Long codItem, String nameCategory, String nameItem) {
 
@@ -43,7 +34,7 @@ public class ValidateIfExists  {
 		}
 	}
 
-	public void validateUpdateItem(Long codItem, AtualizarItem data, Item item) {
+	public void validateUpdateItem(Long codItem, UpdateItem data, Item item) {
 
 		if (codItem != 0) {
 			if (repository.existsByCod(codItem)) {

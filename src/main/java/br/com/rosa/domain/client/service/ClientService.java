@@ -5,9 +5,10 @@ import br.com.rosa.domain.client.Client;
 import br.com.rosa.domain.client.RepositoryCliente;
 import br.com.rosa.domain.client.dto.ClientRegister;
 import br.com.rosa.domain.client.dto.UpdateClient;
-import br.com.rosa.domain.client.service.validations.ValidationCpfCnpj;
-import br.com.rosa.domain.contract.RepositoryContrato;
+import br.com.rosa.domain.client.validations.ValidateRgAndCpf;
+import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,56 +18,43 @@ import org.springframework.stereotype.Service;
 public class ClientService {
 
     @Autowired
-    private ValidationCpfCnpj validationCpfCnpj;
+    private ValidateRgAndCpf validateRgAndCpfCnpj;
 
     @Autowired
     private RepositoryCliente repositoryCliente;
 
     @Autowired
-    private RepositoryContrato repositoryContract;
+    private RepositoryContract repositoryContract;
 
-    public Client registerClient(ClientRegister data) {
+    public Client registerClient(@Valid ClientRegister data) {
 
-        checkRgAndCpf(data.cpf(), data.rg());
+        validateRgAndCpfCnpj.ValidateCreateClientCpfAndRg(data.cpf(), data.rg());
 
-        var addrees = new DataAddress(data.cep(), data.street(), data.number(), data.district(), data.city(), data.uf());
-        var client = new Client(data, addrees);
-
-        repositoryCliente.save(client);
-
-        return client;
-    }
-
-    public Client updateClient(UpdateClient dados) {
-
-        var client = repositoryCliente.getReferenceById(dados.id());
-
-        client.atualizarInformacoes(dados);
+        var address = new DataAddress(data.cep(), data.street(), data.number(), data.district(), data.city(), data.uf());
+        var client = new Client(data, address);
 
         repositoryCliente.save(client);
 
         return client;
     }
 
-    public Page<Client> filterClients(String search, Pageable page) {
+    public Client getClientId(Long id) {
 
-        var clients = repositoryCliente.findAllByNameRasonAndcpfCnpj(search, page);
-
-        return clients;
+        return repositoryCliente.getReferenceById(id);
     }
 
-    private void checkRgAndCpf(String cpf, String rg) {
+    public Client updateClient(UpdateClient data) {
 
-        if (repositoryCliente.existsByCpfCnpj(cpf)) {
-            throw new SqlConstraintViolationException("CPF já existente");
-        }
-        if (repositoryCliente.existsByRgStateRegistration(rg)) {
-            throw new SqlConstraintViolationException("RG já existe");
-        }
+        var client = repositoryCliente.getReferenceById(data.id());
 
-        validationCpfCnpj.validateCnpjCpf(cpf);
+        validateRgAndCpfCnpj.ValidateUpdateClientCpfAndRg(data, client);
+
+        client.updateTheInformation(data);
+
+        repositoryCliente.save(client);
+
+        return client;
     }
-
 
     public void deleteId(Long id) {
 
@@ -79,4 +67,10 @@ public class ClientService {
         repositoryCliente.deleteById(id);
 
     }
+
+    public Page<Client> filterClients(String search, Pageable page) {
+
+        return repositoryCliente.findAllByNameRasonAndcpfCnpj(search, page);
+    }
+
 }

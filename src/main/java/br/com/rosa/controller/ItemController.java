@@ -14,9 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.rosa.domain.item.RepositoryItem;
-import br.com.rosa.domain.item.dto.AtualizarItem;
-import br.com.rosa.domain.item.dto.DadosItem;
-import br.com.rosa.domain.item.dto.ItemCadastro;
+import br.com.rosa.domain.item.dto.UpdateItem;
+import br.com.rosa.domain.item.dto.DataItem;
+import br.com.rosa.domain.item.dto.RegisterItem;
 import br.com.rosa.domain.item.service.ItemService;
 import jakarta.transaction.Transactional;
 
@@ -32,7 +32,7 @@ public class ItemController {
 	
 	@PostMapping
 	@Transactional
-	public ResponseEntity<DadosItem> registerItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "item") ItemCadastro dados, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<DataItem> registerItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "item") RegisterItem dados, UriComponentsBuilder uriBuilder) {
 		
 		var item = service.createItem(file, dados);
 
@@ -42,7 +42,7 @@ public class ItemController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Page<DadosItem>> getItens(
+	public ResponseEntity<Page<DataItem>> getItens(
 			@PageableDefault(page = 0 ,sort = "name",size = 5, direction = Direction.ASC) Pageable page,
 			@RequestParam(required = false) String search) {
 
@@ -56,7 +56,7 @@ public class ItemController {
 	}
 
 	@GetMapping("all")
-	public ResponseEntity<Page<DadosItem>> getAllItens(@PageableDefault(sort = "name", size = 10000, direction = Direction.DESC) Pageable page) {
+	public ResponseEntity<Page<DataItem>> getAllItens(@PageableDefault(sort = "name", size = 10000, direction = Direction.DESC) Pageable page) {
 
 		var listItens = service.forListItens(repository.findAll() ,page);
 
@@ -68,7 +68,7 @@ public class ItemController {
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<DadosItem> getItens(@PathVariable Long id) {
+	public ResponseEntity<DataItem> getItens(@PathVariable Long id) {
 
 		var item = service.getItemId(id);
 
@@ -81,17 +81,17 @@ public class ItemController {
 	
 	@PatchMapping
 	@Transactional
-	public ResponseEntity<DadosItem> updateItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "item") AtualizarItem dados) {
+	public ResponseEntity<DataItem> updateItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "item") UpdateItem dados) {
 
 		var item = service.updateItem(dados, file);
 		
-		return ResponseEntity.ok().body(new DadosItem(item, TransformeAndResizeImage.takeImage(item.getImg())));
+		return ResponseEntity.ok().body(new DataItem(item, TransformeAndResizeImage.takeImage(item.getImg())));
 		
 	}
 	
 	@DeleteMapping("{id}")
 	@Transactional
-	public ResponseEntity<Page<DadosItem>> deleteItem(@PathVariable Long id) {
+	public ResponseEntity<Page<DataItem>> deleteItem(@PathVariable Long id) {
 		repository.deleteById(id);
 		return ResponseEntity.noContent().build();
 		

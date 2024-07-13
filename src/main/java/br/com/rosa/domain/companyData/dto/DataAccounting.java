@@ -9,9 +9,10 @@ public record DataAccounting(
         double sumPaymentsYear,
         double valueExpensesMonth,
         double valueExpensesYear,
-        List<Expenses> expensesList
+        List<Expenses> expensesList,
+        List<DtoCommissionEmployee> commission
 ) {
     public DataAccounting(DataAccounting data) {
-        this(data.sumPaymentsMonth, data.sumPaymentsYear, data.valueExpensesMonth, data.valueExpensesYear, data.expensesList);
+        this(data.sumPaymentsMonth, data.sumPaymentsYear, data.valueExpensesMonth, data.valueExpensesYear, data.expensesList, data.commission);
     }
 }

@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RosaApplication {
 
 	public static void main(String[] args) {
+		System.out.println("teste");
 		SpringApplication.run(RosaApplication.class, args);
+
 	}
 
 }

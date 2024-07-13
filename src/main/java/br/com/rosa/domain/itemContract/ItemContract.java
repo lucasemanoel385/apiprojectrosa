@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.rosa.domain.contract.enunm.SituacaoContrato;
+import br.com.rosa.domain.contract.enunm.SituationContract;
 import br.com.rosa.domain.item.Item;
 import br.com.rosa.domain.itemContract.dto.ItemContratoCadastro;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ public class ItemContract {
 	private LocalDate startDate;
 	private LocalDate finalDate;
 	@Enumerated(EnumType.STRING)
-	private SituacaoContrato contractSituation;
+	private SituationContract contractSituation;
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "categoria_id")
 //	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -64,14 +64,14 @@ public class ItemContract {
 		this.id = id;
 	}
 	
-	public ItemContract(Item item, double value, LocalDate dataInicio, LocalDate dataFinal, SituacaoContrato situacaoContrato) {
+	public ItemContract(Item item, double value, LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
 		this.cod = item.getCod();
 		this.idItem = item.getId();
 		this.name = item.getName();
 		this.valueItemContract = item.getValueItem();
 		this.replacementValue = item.getReplacementValue();
 		this.amount = item.getAmount();
-		this.valueTotalItem = value;
+		this.valueTotalItem = item.getValueItem() * item.getAmount();
 		this.startDate = dataInicio;
 		this.finalDate = dataFinal;
 		this.contractSituation = situacaoContrato;

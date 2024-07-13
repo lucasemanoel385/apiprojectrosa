@@ -16,4 +16,5 @@ public interface RepositoryCliente extends JpaRepository<Client, Long> {
 
     @Query(value = "select * from client", nativeQuery = true)
     Page<Client> findAll(Pageable page);
+
 }

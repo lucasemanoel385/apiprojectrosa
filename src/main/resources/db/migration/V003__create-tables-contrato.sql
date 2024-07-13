@@ -12,9 +12,9 @@ create table Contract(
     seller varchar(40),
     observation varchar(500),
     annotations varchar(500),
-    
+    payment_id bigint,
 
     primary key(id),
-    constraint fk_contract_cliente_id foreign key(client_id) references client(id)
+    constraint fk_contract_client_id foreign key(client_id) references client(id)
 
-)
+);

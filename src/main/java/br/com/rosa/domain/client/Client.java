@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.rosa.domain.client.dto.UpdateClient;
 import br.com.rosa.domain.client.dto.ClientRegister;
-import br.com.rosa.domain.person.Pessoa;
+import br.com.rosa.domain.person.People;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Client extends Pessoa{
+public class Client extends People {
 
 	private String nameReason;
 	private String cpfCnpj;
@@ -43,8 +43,19 @@ public class Client extends Pessoa{
 		
 		super(id);
 	}
-	
-	public void atualizarInformacoes(UpdateClient data) {
+
+
+	public Client(long l, ClientRegister data, DataAddress address) {
+
+		super(l,data.email(), address, data.phone1(), data.phone2());
+		this.nameReason = data.name();
+		this.cpfCnpj = data.cpf();
+		this.rgStateRegistration = data.rg();
+		this.dateBirthCompanyFormation = data.dateBirth();
+
+	}
+
+	public void updateTheInformation(UpdateClient data) {
 		if(data.nameReason() != null && !this.getNameReason().equals(data.nameReason())) {
 			this.setNameReason(data.nameReason());
 		}

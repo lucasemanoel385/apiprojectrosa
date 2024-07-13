@@ -1,7 +1,7 @@
 package br.com.rosa.domain.categoryItem.service;
 
 import br.com.rosa.domain.categoryItem.Category;
-import br.com.rosa.domain.categoryItem.RepositoryCategoria;
+import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.categoryItem.dto.RegisterCategory;
 import br.com.rosa.domain.categoryItem.dto.UpdateCategory;
 import br.com.rosa.domain.item.RepositoryItem;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
 
     @Autowired
-    private RepositoryCategoria repository;
+    private RepositoryCategory repository;
 
     @Autowired
     private RepositoryItem repositoryItem;

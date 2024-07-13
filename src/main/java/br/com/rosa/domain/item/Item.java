@@ -3,7 +3,7 @@ package br.com.rosa.domain.item;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.rosa.domain.categoryItem.Category;
-import br.com.rosa.domain.item.dto.ItemCadastro;
+import br.com.rosa.domain.item.dto.RegisterItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,7 +41,7 @@ public class Item {
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Category category;
 	
-	public Item(ItemCadastro dados, Long idCategory, byte[] img) {
+	public Item(RegisterItem dados, Long idCategory, byte[] img) {
 		this.img = img;
 		this.cod = (long) dados.cod();
 		this.name = dados.name();
@@ -82,7 +82,7 @@ public class Item {
 	
 	@Override
 	public String toString() {
-		return "Cód do item: " + this.cod + " - Nome do item: " + this.name + " - Unidades: " + this.amount;
+		return "Cód do item: " + this.cod + " - Nome do item: " + this.name + " - Estoque total de unidades: " + this.amount;
 	}
 	
 }

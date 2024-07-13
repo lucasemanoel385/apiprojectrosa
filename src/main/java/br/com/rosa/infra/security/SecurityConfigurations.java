@@ -41,7 +41,8 @@ public class SecurityConfigurations {
                              requestMatchers(HttpMethod.GET, "/task/**").hasAnyRole("ADMIN", "USER").
                              requestMatchers(HttpMethod.POST, "/task/**").hasRole("ADMIN").
                              requestMatchers(HttpMethod.DELETE, "/task/**").hasRole("ADMIN").
-                             requestMatchers(HttpMethod.GET, "/data-company/**").hasRole("ADMIN").
+                             requestMatchers(HttpMethod.GET, "/data-company/**").hasAnyRole("ADMIN", "USER").
+                             requestMatchers(HttpMethod.GET, "/data-company/accouting/**").hasRole("ADMIN").
                              requestMatchers(HttpMethod.PUT, "/data-company/**").hasRole("ADMIN").
                              requestMatchers(HttpMethod.PATCH, "/data-company/**").hasRole("ADMIN").
                      anyRequest().authenticated();

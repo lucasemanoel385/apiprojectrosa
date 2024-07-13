@@ -43,6 +43,11 @@ public class Category {
 		this.name = data;
 	}
 
+	public Category(long l, String testCategory) {
+		this.id = l;
+		this.name = testCategory;
+	}
+
 
 	public void attCategory(UpdateCategory data) {
 

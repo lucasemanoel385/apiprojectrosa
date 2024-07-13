@@ -40,7 +40,7 @@ public class TransformeAndResizeImage {
     }
 
     public static String takeImage(byte[] imgBlob) {
-        return Base64.getEncoder().encodeToString(imgBlob);
+        return imgBlob != null ? Base64.getEncoder().encodeToString(imgBlob) : null;
     }
 
     private static BufferedImage resizeImage(BufferedImage imageOriginal, int width, int height) {
