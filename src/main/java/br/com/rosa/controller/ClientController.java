@@ -20,7 +20,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("cliente")
+@RequestMapping("client")
 public class ClientController {
 	
 	@Autowired
@@ -35,7 +35,7 @@ public class ClientController {
 
 		var client = service.registerClient(dados);
 
-		var uri = uriBuilder.path("/cliente/{id}").buildAndExpand(client.getId()).toUri();
+		var uri = uriBuilder.path("/client/{id}").buildAndExpand(client.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(new DataClient(client));
 		

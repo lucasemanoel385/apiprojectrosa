@@ -22,8 +22,8 @@ public class TokenService {
     private String secret;
 
     public String generateToken(User user) {
-
         try {
+            System.out.println(secret);
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
                     // Pra identificar a ferramenta/API que é dona pela geração do token

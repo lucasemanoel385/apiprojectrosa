@@ -153,13 +153,14 @@ public class ContractService {
 	private Set<ItemContract> setItemsContract(List<ContractItem> dataItems, LocalDate dateOf, LocalDate dateUntil, SituationContract contractSituation) {
 		
 		Set<ItemContract> items = new HashSet<>();
-		Item item = null;
-		ItemContract itemContrato = null;
+
+
         for (ContractItem t : dataItems) {
+			Item item = null;
+			ItemContract itemContrato = null;
             item = repositoryItem.getReferenceById(t.getId());
             itemContrato = new ItemContract(item, dateOf, dateUntil, contractSituation);
             itemContrato.setAmount(t.getAmount());
-            //repositoryItemContrato.save(itemContrato);
 			if (!items.add(itemContrato)) {
 				throw new ValidacaoException("Itens iguais, favor remover o item duplicado.");
 			}

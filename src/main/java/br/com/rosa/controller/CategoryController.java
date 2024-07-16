@@ -17,7 +17,7 @@ import br.com.rosa.domain.categoryItem.dto.DataCategory;
 import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("categoria")
+@RequestMapping("category")
 public class CategoryController {
 	
 	@Autowired

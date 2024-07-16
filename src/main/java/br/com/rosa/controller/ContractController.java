@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("contrato")
+@RequestMapping("contract")
 public class ContractController {
 	
 	@Autowired
@@ -43,7 +43,7 @@ public class ContractController {
 	public ResponseEntity<DataContract> registerContract(@RequestBody @Valid ContractRegister dados, UriComponentsBuilder uriBuilder) throws Exception {
 		var contrato = service.registerContract(dados);
 
-		var uri = uriBuilder.path("/contrato/{id}").buildAndExpand(contrato.id()).toUri();
+		var uri = uriBuilder.path("/contract/{id}").buildAndExpand(contrato.id()).toUri();
 		return ResponseEntity.created(uri).body(contrato);
 	}
 
@@ -142,7 +142,7 @@ public class ContractController {
 
 	}
 
-	@DeleteMapping("itemContrato/{id}")
+	/*@DeleteMapping("itemContrato/{id}")
 	@Transactional
 	public ResponseEntity deleteItemContract(@PathVariable Long id) {
 	//	var itemExcluido = repositoryItemContrato.getReferenceById(id);
@@ -151,40 +151,14 @@ public class ContractController {
 		repositoryItemContrato.deleteById(id);
 		return ResponseEntity.noContent().build();
 
-	}
+	}*/
 
 	@PatchMapping("situation")
 	@Transactional
 	public ResponseEntity updateSituationContrato(@RequestBody @Valid UpdateSituationContract data) {
-		System.out.println(data);
 		service.changeSituationContract(data);
-
 		return ResponseEntity.ok().build();
-
-//		Contrato contrato = repository.getReferenceById(dados.contratoId());
-//
-//		if (SituacaoContrato.RESERVADO == dados.situacaoContrato()) {
-//			for (int i = 0; i < contrato.getItens().size(); i++) {
-//				//Usar a query do existe nessa de encontrar os itens
-//				var itemData = repositoryItemContrato.quantityItemsDate(contrato.getItens().get(i).getIdItem(),
-//						contrato.getDataInicio(), contrato.getDataFinal());
-//				var itemEstoque = repositoryItem.getReferenceById(contrato.getItens().get(i).getIdItem());
-//				var itemRetorno = itemEstoque.getQuantidade();
-//				var resultado = (itemEstoque.getQuantidade() - itemData) +1 ;
-//				if(resultado > 0) {
-//					itemEstoque.setQuantidade(resultado);
-//					contrato.setSituacaoContrato(dados.situacaoContrato());
-//				} else {
-//					throw new Exception("falta de estoque na data especifica" + itemEstoque);
-//				}
-//				itemEstoque.setQuantidade(itemRetorno);
-//			}
-//		}
-//
-//		repository.save(contrato);
-
 	}
-
 	@DeleteMapping("{id}")
 	@Transactional
 	public ResponseEntity deleteContract(@PathVariable Long id) {

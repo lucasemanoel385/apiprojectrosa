@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "idItem")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //você precisa ignorar os relacionamento lazy do hibernate porque eles vem inicialmente vazios e o jackson vai tentar fazer o parse dele pra json/xml
 public class ItemContract {
 	

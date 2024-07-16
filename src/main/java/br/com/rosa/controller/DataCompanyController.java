@@ -119,47 +119,4 @@ public class DataCompanyController {
 
 	}
 
-	/*@GetMapping("all")
-	public ResponseEntity<Page<DadosItem>> getAllItens(@PageableDefault(sort = "name", size = 10000, direction = Direction.DESC) Pageable page) {
-
-		var listItens = service.listItens(page);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		return ResponseEntity.ok().headers(headers).body(listItens);
-
-	}
-
-	@GetMapping("{id}")
-	public ResponseEntity<DadosItem> getItens(@PathVariable Long id) {
-
-		var item = service.getItemId(id);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		return ResponseEntity.ok().headers(headers).body(item);
-
-	}
-	
-	@PatchMapping
-	@Transactional
-	public ResponseEntity<DadosItem> updateItem(@RequestPart(name = "file", required = false) MultipartFile file, @RequestPart(name = "item") AtualizarItem dados) {
-
-		var item = service.updateItem(dados, file);
-		
-		return ResponseEntity.ok().body(new DadosItem(item, item.getUrlimg()));
-		
-	}
-	
-	@DeleteMapping("{id}")
-	@Transactional
-	public ResponseEntity<Page<DadosItem>> deleteItem(@PathVariable Long id) {
-		System.out.println(id);
-		service.deleteItem(id);
-		return ResponseEntity.noContent().build();
-		
-	}*/
-
 }
