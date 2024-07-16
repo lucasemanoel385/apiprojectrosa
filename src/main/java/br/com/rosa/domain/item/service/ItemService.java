@@ -1,24 +1,11 @@
 package br.com.rosa.domain.item.service;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import br.com.rosa.domain.TransformeAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
-import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
-import br.com.rosa.infra.exceptions.ValidacaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -75,25 +62,23 @@ public class ItemService {
 		return i;
 	}
 
-	public Page<DataItem> listItens(Pageable page, String search) {
-
-		List<DataItem> listItens = new ArrayList<>();
+	public Page<DataItem> listItems(Pageable page, String search) {
 
 		if (search == null || search.isEmpty()) {
-			var itens = repository.findAll(Sort.by("name"));
 
-			return forListItens(itens, page);
+			var itemsParam = repository.findAll(Sort.by("name"));
+			return forListItems(itemsParam, page);
+
 		} else {
 
-			var itensParam = repository.findAllByNameOrCode(search);
-			return forListItens(itensParam, page);
-
+			var itemsParam = repository.findAllByNameOrCode(search);
+			return forListItems(itemsParam, page);
 		}
 	}
 
-	public Page<DataItem> forListItens(List<Item> items, Pageable page) {
+	public Page<DataItem> forListItems(List<Item> items, Pageable page) {
 
-		List<DataItem> listItens = new ArrayList<>();
+		List<DataItem> listItems = new ArrayList<>();
 
 		items.forEach(item -> {
 
@@ -102,28 +87,24 @@ public class ItemService {
 
 			//Criamos a instancia do DTO(Record) e adicionamos na lista
 			DataItem i = new DataItem(item, base64Image);
-			listItens.add(i);
+			listItems.add(i);
 		});
 
 		//Retornar o menor numero entre os 2 parametros
-		int start = Math.min((int)page.getOffset(), listItens.size());
-		int end = Math.min((start + page.getPageSize()), listItens.size());
-		Page<DataItem> pagina = new PageImpl<DataItem>(listItens.subList(start, end), page, listItens.size());
+		int start = Math.min((int)page.getOffset(), listItems.size());
+		int end = Math.min((start + page.getPageSize()), listItems.size());
+		Page<DataItem> pagee = new PageImpl<DataItem>(listItems.subList(start, end), page, listItems.size());
 
-		return pagina;
+		return pagee;
 	}
 
-	public Item updateItem(UpdateItem dados, MultipartFile file) {
+	public Item updateItem(UpdateItem data, MultipartFile file) {
 
-		var item = repository.getReferenceById(dados.id());
+		var item = repository.getReferenceById(data.id());
 
-		validate.validateUpdateItem(0l, dados, item);
+		validate.validateUpdateItem(data, item);
 
-		if (item.getCod() != dados.cod() && repository.existsByCod(dados.cod())){
-			throw new SqlConstraintViolationException("Código do produto já existe");
-		}
-
-		checkAndUpdateNullorBlank(item, dados);
+		checkAndUpdateNullOrBlank(item, data);
 
 		if(!(file == null)) {
 			item.setImg(TransformeAndResizeImage.saveImgItem(file));
@@ -135,9 +116,9 @@ public class ItemService {
 
 	}
 
-	private void checkAndUpdateNullorBlank(Item item, UpdateItem data) {
+	private void checkAndUpdateNullOrBlank(Item item, UpdateItem data) {
 
-		if(data.name() != null || data.name() != "") {
+		if(data.name() != null) {
 			item.setName(data.name());
 		}
 		if(data.value() > 0) {

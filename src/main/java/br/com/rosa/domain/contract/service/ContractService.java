@@ -34,14 +34,14 @@ public class ContractService {
 	private RepositoryItemContract repositoryItemContrato;
 
 	@Autowired
-	private List<ValidateContractRent> validar;
-	
-	public DataContract cadastrarContrato(ContractRegister dados) {
+	private List<ValidateContractRent> validate;
 
-		var itens = setItensContrato(dados.items(), dados.dateOf(), dados.dateUntil(), SituationContract.ORCAMENTO);
-		validar.forEach(v -> v.validate(itens));
+	public DataContract registerContract(ContractRegister data) {
 
-		Contract contract = new Contract(dados, LocalDate.now(), itens);
+		var items = setItemsContract(data.items(), data.dateOf(), data.dateUntil(), SituationContract.ORCAMENTO);
+		validate.forEach(v -> v.validate(items));
+
+		Contract contract = new Contract(data, LocalDate.now(), items);
 		repository.save(contract);
 
 		var itemsContract = getImgOfItens(contract);
@@ -78,7 +78,7 @@ public class ContractService {
 			for (ItemContract test : itensPrevious) {
 				repositoryItemContrato.deleteById(test.getId());
 			}
-			var itens = setItensContrato(data.items(), data.dateOf(), data.dateUntil(), contract.getContractSituation());
+			var itens = setItemsContract(data.items(), data.dateOf(), data.dateUntil(), contract.getContractSituation());
 			itemsCurrent.addAll(itens);
 		}
 
@@ -92,9 +92,7 @@ public class ContractService {
 			}
 		}
 
-		//situacoesContrato(contract);
-
-		validar.forEach(v -> v.validate(itemsCurrent));
+		validate.forEach(v -> v.validate(itemsCurrent));
 		contract.setItens(itemsCurrent);
 		contract.updateAtrb(data, itemsCurrent);
 		repository.save(contract);
@@ -139,7 +137,7 @@ public class ContractService {
 		switch (contract.getContractSituation()) {
 			case ORCAMENTO:
 				var itensByContract = contract.getItens();
-				validar.forEach(v -> v.validate(itensByContract));
+				validate.forEach(v -> v.validate(itensByContract));
 				contract.setContractSituation(SituationContract.RESERVADO);
 				contract.setDateContract(LocalDate.now());
 				contract.getItens().forEach(item -> item.setContractSituation(SituationContract.RESERVADO));
@@ -152,23 +150,23 @@ public class ContractService {
 	}
 
 	
-	private Set<ItemContract> setItensContrato(List<ContractItem> dados, LocalDate dateOf, LocalDate dateUntil, SituationContract contractSituation) {
+	private Set<ItemContract> setItemsContract(List<ContractItem> dataItems, LocalDate dateOf, LocalDate dateUntil, SituationContract contractSituation) {
 		
-		Set<ItemContract> itens = new HashSet<>();
+		Set<ItemContract> items = new HashSet<>();
 		Item item = null;
 		ItemContract itemContrato = null;
-        for (ContractItem t : dados) {
+        for (ContractItem t : dataItems) {
             item = repositoryItem.getReferenceById(t.getId());
-            itemContrato = new ItemContract(item, t.getTotal(), dateOf, dateUntil, contractSituation);
+            itemContrato = new ItemContract(item, dateOf, dateUntil, contractSituation);
             itemContrato.setAmount(t.getAmount());
             //repositoryItemContrato.save(itemContrato);
-			if (!itens.add(itemContrato)) {
+			if (!items.add(itemContrato)) {
 				throw new ValidacaoException("Itens iguais, favor remover o item duplicado.");
 			}
-            itens.add(itemContrato);
+            items.add(itemContrato);
         }
 		
-		return itens;
+		return items;
 	}
 
 }

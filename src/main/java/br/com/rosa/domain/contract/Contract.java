@@ -55,16 +55,16 @@ public class Contract {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contract", fetch = FetchType.LAZY)
 	private List<Payment> payment = new ArrayList<>();
 	
-	public Contract(ContractRegister data, LocalDate dateNow, Set<ItemContract> itens) {
+	public Contract(ContractRegister data, LocalDate dateNow, Set<ItemContract> items) {
 
 		this.client = new Client(data.client());
 		this.dateContract = dateNow;
 		this.startDate = data.dateOf();
 		this.finalDate = data.dateUntil();
-		this.itens = itens;
-		this.value = this.valueAllItems(itens);
+		this.itens = items;
+		this.value = this.valueAllItems(items);
 		this.discount = data.discount();
-		this.valueTotal = this.valorTotal(data.discount(), this.valueAllItems(itens));
+		this.valueTotal = this.valorTotal(data.discount(), this.valueAllItems(items));
 		this.contractSituation = SituationContract.ORCAMENTO;
 		this.seller = new Employee(data.seller());
 		this.observation = data.observation();

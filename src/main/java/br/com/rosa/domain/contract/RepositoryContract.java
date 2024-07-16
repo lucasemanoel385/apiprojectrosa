@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RepositoryContract extends JpaRepository<Contract, Long>{
 
-	@Query(value = "select * from contract where data_inicio = :dataInicio and data_final = :dataFinal", nativeQuery = true)
+	@Query(value = "select * from contract where start_date = :dataInicio and final_date = :dataFinal", nativeQuery = true)
 	List<Contract> findAllData(LocalDate dataInicio, LocalDate dataFinal);
 
 	@Query(value = "select c.id, c.client_id, c.date_contract, c.start_date, c.final_date, c.discount, c.value, \n" +

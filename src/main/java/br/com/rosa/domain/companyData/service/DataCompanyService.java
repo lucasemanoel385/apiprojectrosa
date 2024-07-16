@@ -70,7 +70,7 @@ public class DataCompanyService {
 
 	public GetDataCompany getDataCompany() {
 
-		var company = repository.getReferenceById(1l);
+		var company = repository.getReferenceById(1L);
 
 		var base64imagem = TransformeAndResizeImage.takeImage(company.getImg());
 

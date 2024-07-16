@@ -1,6 +1,5 @@
 package br.com.rosa.controller;
 
-import br.com.rosa.domain.contract.Contract;
 import br.com.rosa.domain.contract.dto.*;
 import br.com.rosa.domain.paymentContract.Payment;
 import br.com.rosa.domain.paymentContract.RepositoryPayment;
@@ -42,7 +41,7 @@ public class ContractController {
 	@PostMapping
 	@Transactional
 	public ResponseEntity<DataContract> registerContract(@RequestBody @Valid ContractRegister dados, UriComponentsBuilder uriBuilder) throws Exception {
-		var contrato = service.cadastrarContrato(dados);
+		var contrato = service.registerContract(dados);
 
 		var uri = uriBuilder.path("/contrato/{id}").buildAndExpand(contrato.id()).toUri();
 		return ResponseEntity.created(uri).body(contrato);

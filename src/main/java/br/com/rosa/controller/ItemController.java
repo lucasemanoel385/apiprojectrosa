@@ -46,7 +46,7 @@ public class ItemController {
 			@PageableDefault(page = 0 ,sort = "name",size = 5, direction = Direction.ASC) Pageable page,
 			@RequestParam(required = false) String search) {
 
-		var listItens = service.listItens(page, search);
+		var listItens = service.listItems(page, search);
 		
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -58,7 +58,7 @@ public class ItemController {
 	@GetMapping("all")
 	public ResponseEntity<Page<DataItem>> getAllItens(@PageableDefault(sort = "name", size = 10000, direction = Direction.DESC) Pageable page) {
 
-		var listItens = service.forListItens(repository.findAll() ,page);
+		var listItens = service.forListItems(repository.findAll() ,page);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);

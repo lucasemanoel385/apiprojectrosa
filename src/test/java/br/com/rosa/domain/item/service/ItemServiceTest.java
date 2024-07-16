@@ -7,15 +7,14 @@ import br.com.rosa.domain.item.Item;
 import br.com.rosa.domain.item.RepositoryItem;
 import br.com.rosa.domain.item.dto.DataItem;
 import br.com.rosa.domain.item.dto.RegisterItem;
+import br.com.rosa.domain.item.dto.UpdateItem;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
 import br.com.rosa.infra.exceptions.ValidacaoException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -119,21 +117,15 @@ class ItemServiceTest {
     }
 
     @Test
-    void listItens() {
-
-
-
-    }
-
-    @Test
-    void forListItens() throws IOException {
+    @DisplayName("Should return a list page")
+    void forListItems() throws IOException {
 
         List<Item> items = new ArrayList<>();
         var mockFile = returnImgFake();
         items.add(new Item(new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory"),
                 1L, mockFile.getBytes()));
 
-        List<DataItem> listItens = new ArrayList<>();
+        List<DataItem> listItems = new ArrayList<>();
         items.forEach(item -> {
 
             //Pega a imagem da pasta com a url salva no banco de dados
@@ -141,23 +133,65 @@ class ItemServiceTest {
 
             //Criamos a instancia do DTO(Record) e adicionamos na lista
             DataItem i = new DataItem(item, base64Image);
-            listItens.add(i);
+            listItems.add(i);
         });
 
 
         Pageable page = PageRequest.of(0, 5);
-        int start = Math.min((int)page.getOffset(), listItens.size());
-        int end = Math.min((start + page.getPageSize()), listItens.size());
-        Page<DataItem> pagina = new PageImpl<DataItem>(listItens.subList(start, end), page, listItens.size());
+        int start = Math.min((int)page.getOffset(), listItems.size());
+        int end = Math.min((start + page.getPageSize()), listItems.size());
+        Page<DataItem> pagina = new PageImpl<DataItem>(listItems.subList(start, end), page, listItems.size());
 
-        var returnList = serviceItemTest.forListItens(items, page);
+        var returnList = serviceItemTest.forListItems(items, page);
 
         assertThat(returnList).isEqualTo(pagina);
 
     }
 
     @Test
-    void updateItem() {
+    @DisplayName("Should return updated item")
+    void updateItem01() throws IOException {
+
+        var updateItem = new UpdateItem(1L, 1L, "test", 10, 20, 1L, "1L");
+
+        var mockFile = returnImgFake();
+
+        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+
+        var item = new Item(dtoItem, 1L, mockFile.getBytes());
+
+        when(repositoryItemTest.getReferenceById(updateItem.id())).thenReturn(item);
+
+        var itemService = serviceItemTest.updateItem(updateItem, mockFile);
+
+        verify(validateIfExistsTest,times(1)).validateUpdateItem(updateItem, item);
+
+        verify(repositoryItemTest, times(1)).save(item);
+
+        assertThat(itemService).isEqualTo(item);
+    }
+
+    @Test
+    @DisplayName("Should return SqlConstraintViolationException")
+    void updateItem02() throws IOException {
+
+        var updateItem = new UpdateItem(1L, 1L, "test", 10, 20, 1L, "1L");
+
+        var mockFile = returnImgFake();
+
+        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+
+        var item = new Item(dtoItem, 1L, mockFile.getBytes());
+
+        when(repositoryItemTest.getReferenceById(updateItem.id())).thenReturn(item);
+
+        doThrow(new SqlConstraintViolationException("Código do produto já existe")).when(validateIfExistsTest).validateUpdateItem(updateItem, item);
+
+        SqlConstraintViolationException exception = Assertions.assertThrows(SqlConstraintViolationException.class, () -> {
+            serviceItemTest.updateItem(updateItem, mockFile);
+        });
+
+        Assertions.assertEquals("Código do produto já existe", exception.getMessage());
     }
 
     private MockMultipartFile returnImgFake() throws IOException {

@@ -64,7 +64,7 @@ public class ItemContract {
 		this.id = id;
 	}
 	
-	public ItemContract(Item item, double value, LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
+	public ItemContract(Item item, LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
 		this.cod = item.getCod();
 		this.idItem = item.getId();
 		this.name = item.getName();

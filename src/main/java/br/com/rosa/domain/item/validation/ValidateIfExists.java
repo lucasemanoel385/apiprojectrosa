@@ -16,7 +16,7 @@ public class ValidateIfExists  {
 
 	@Autowired
 	private RepositoryCategory repositoryCategory;
-	
+
 	public void validateRegisterItem(Long codItem, String nameCategory, String nameItem) {
 
 		if (codItem != 0) {
@@ -34,10 +34,10 @@ public class ValidateIfExists  {
 		}
 	}
 
-	public void validateUpdateItem(Long codItem, UpdateItem data, Item item) {
+	public void validateUpdateItem(UpdateItem data, Item item) {
 
-		if (codItem != 0) {
-			if (repository.existsByCod(codItem)) {
+		if (data.cod() != 0) {
+			if (!item.getCod().equals(data.cod()) && repository.existsByCod(data.cod())) {
 				throw new SqlConstraintViolationException("Código do produto já existe");
 			}
 		}

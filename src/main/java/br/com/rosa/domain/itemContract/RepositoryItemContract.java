@@ -13,9 +13,9 @@ public interface RepositoryItemContract extends JpaRepository<ItemContract, Long
 	@Query("""
 			select coalesce(sum(i.amount), 0)
 			from ItemContract
-			i where i.idItem = :id and i.finalDate >= :dataInicio and i.startDate <= :dataFinal and i.contractSituation = :situacaoContrato
+			i where i.idItem = :id and i.finalDate >= :dateFirst and i.startDate <= :dateEnd and i.contractSituation = :situacaoContrato
 			""")
-	Long quantityItemsDate(Long id ,LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato);
+	Long quantityItemsDate(Long id ,LocalDate dateFirst, LocalDate dateEnd, SituationContract situacaoContrato);
 
 	@Modifying
 	@Query(value = "DELETE FROM itens_contract WHERE id = :id", nativeQuery = true)
