@@ -1,6 +1,6 @@
 package br.com.rosa.domain;
 
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
-public class TransformeAndResizeImage {
+public class TransformAndResizeImage {
     
     public static byte[] saveImgItem(MultipartFile file) {
 
@@ -22,20 +22,20 @@ public class TransformeAndResizeImage {
             int imageHeight = 200;
 
             //Redimensiona a imagem com a largura e altura desejada
-            BufferedImage imagemRedimensionada = resizeImage(imageOrigin, imageWidth, imageHeight);
+            BufferedImage imgResized = resizeImage(imageOrigin, imageWidth, imageHeight);
 
             //Desenha a imagem com sua altura e largura definidas
-            Graphics2D g = imagemRedimensionada.createGraphics();
+            Graphics2D g = imgResized.createGraphics();
             g.drawImage(imageOrigin, 0, 0, imageWidth, imageHeight, null);
             g.dispose();
 
             ByteArrayOutputStream img = new ByteArrayOutputStream();
-            ImageIO.write(imagemRedimensionada, "png", img);
+            ImageIO.write(imgResized, "png", img);
 
             return img.toByteArray();
 
         } catch (Exception e) {
-            throw new ValidacaoException("Formatação de imagem errada");
+            throw new ValidationException("Formatação de imagem errada");
         }
     }
 

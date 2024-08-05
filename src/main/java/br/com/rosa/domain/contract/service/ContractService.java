@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import br.com.rosa.domain.TransformeAndResizeImage;
+import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.contract.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import br.com.rosa.domain.item.Item;
 import br.com.rosa.domain.item.RepositoryItem;
 import br.com.rosa.domain.itemContract.ItemContract;
 import br.com.rosa.domain.itemContract.RepositoryItemContract;
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 
 @Service
 public class ContractService {
@@ -121,7 +121,7 @@ public class ContractService {
 			var img = repositoryItem.existsById(i.getIdItem()) ? repositoryItem.getReferenceById(i.getIdItem()).getImg() : null;
 			itemsContract.add(new DataItemsContract(i.getIdItem(), i.getCod(), i.getName(),
 					i.getAmount(), i.getValueItemContract(),
-					i.getValueTotalItem(), i.getReplacementValue(), TransformeAndResizeImage.takeImage(img)));
+					i.getValueTotalItem(), i.getReplacementValue(), TransformAndResizeImage.takeImage(img)));
 		});
 
 		return itemsContract;
@@ -131,7 +131,7 @@ public class ContractService {
 	private void updateSituationContract(Contract contract) {
 		
 		if(contract.getContractSituation() == SituationContract.RESERVADO) {
-			throw new ValidacaoException("Contrato já reservado");
+			throw new ValidationException("Contrato já reservado");
 		}
 		
 		switch (contract.getContractSituation()) {
@@ -162,7 +162,7 @@ public class ContractService {
             itemContrato = new ItemContract(item, dateOf, dateUntil, contractSituation);
             itemContrato.setAmount(t.getAmount());
 			if (!items.add(itemContrato)) {
-				throw new ValidacaoException("Itens iguais, favor remover o item duplicado.");
+				throw new ValidationException("Itens iguais, favor remover o item duplicado.");
 			}
             items.add(itemContrato);
         }

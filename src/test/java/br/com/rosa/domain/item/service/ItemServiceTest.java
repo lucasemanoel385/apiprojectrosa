@@ -1,6 +1,6 @@
 package br.com.rosa.domain.item.service;
 
-import br.com.rosa.domain.TransformeAndResizeImage;
+import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.Category;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.Item;
@@ -10,7 +10,7 @@ import br.com.rosa.domain.item.dto.RegisterItem;
 import br.com.rosa.domain.item.dto.UpdateItem;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,8 +67,8 @@ class ItemServiceTest {
         when(repositoryCategoryTest.getReferenceByName(dtoItem.category())).thenReturn(category);
 
         // Mockando método estático pois o TransformeAndRisezeImage.saveImgItem é static
-        try (var mockedStatic = Mockito.mockStatic(TransformeAndResizeImage.class)) {
-            mockedStatic.when(() -> TransformeAndResizeImage.saveImgItem(mockFile)).thenReturn(mockFile.getBytes());
+        try (var mockedStatic = Mockito.mockStatic(TransformAndResizeImage.class)) {
+            mockedStatic.when(() -> TransformAndResizeImage.saveImgItem(mockFile)).thenReturn(mockFile.getBytes());
 
             var item = new Item(dtoItem, category.getId(), mockFile.getBytes());
 
@@ -91,7 +91,7 @@ class ItemServiceTest {
 
         when(repositoryCategoryTest.getReferenceByName(dtoItem.category())).thenReturn(category);
 
-        ValidacaoException exception =  Assertions.assertThrows(ValidacaoException.class, () -> {
+        ValidationException exception =  Assertions.assertThrows(ValidationException.class, () -> {
             serviceItemTest.createItem(mockFile, dtoItem);
         });
 
@@ -129,7 +129,7 @@ class ItemServiceTest {
         items.forEach(item -> {
 
             //Pega a imagem da pasta com a url salva no banco de dados
-            var base64Image = TransformeAndResizeImage.takeImage(item.getImg());
+            var base64Image = TransformAndResizeImage.takeImage(item.getImg());
 
             //Criamos a instancia do DTO(Record) e adicionamos na lista
             DataItem i = new DataItem(item, base64Image);

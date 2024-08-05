@@ -13,18 +13,18 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 //RestControllerAdvice fala pro spring que é essa classe que vai tratar os erros da API
 @RestControllerAdvice
-public class TratadorDeErros {
+public class HandleErrors {
 
 	//Error 404 é tratado quando o notfoundexception que é lançada pelo jpa
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity tratarErro404() {
+	public ResponseEntity handlerError404() {
 
 		return ResponseEntity.notFound().build();
 	}
 	
 	//Erro pra quando tem algum campo invalido
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity tratarErro400(MethodArgumentNotValidException ex) {
+	public ResponseEntity handlerError400(MethodArgumentNotValidException ex) {
 		var erros = ex.getFieldErrors();
 
 												//erros me da uma stream e mape-e cada objeto field erro para um objeto erro validacao e me devolvendo uma lista
@@ -36,13 +36,13 @@ public class TratadorDeErros {
 		return ResponseEntity.status(400).body(ex.getMessage());
 	}
 	
-	@ExceptionHandler(ValidacaoException.class)
-	public ResponseEntity tratarErroRegraDeNegocio(ValidacaoException ex) {
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity handlerErrorBusinessRule(ValidationException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 
 	@ExceptionHandler(SqlConstraintViolationException.class)
-	public ResponseEntity tratarErroRegraDeNegocio(SqlConstraintViolationException ex) {
+	public ResponseEntity handlerErrorBusinessRule(SqlConstraintViolationException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 	@ExceptionHandler(NullPointerException.class)
@@ -51,17 +51,17 @@ public class TratadorDeErros {
 	}
 
 	@ExceptionHandler(AutenticationException.class)
-	public ResponseEntity tratarErroAutenticacao(AutenticationException ex) {
+	public ResponseEntity handlerErrorAuthentication(AutenticationException ex) {
 		return ResponseEntity.status(403).body(ex.getMessage());
 	}
 
 	@ExceptionHandler(UnexpectedTypeException.class)
-	public ResponseEntity tratarErroAutenticacao(UnexpectedTypeException ex) {
+	public ResponseEntity handlerErrorAuthentication(UnexpectedTypeException ex) {
 		return ResponseEntity.status(400).body(ex.getMessage());
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity tratarErroAutenticacao(HttpMessageNotReadableException ex) {
+	public ResponseEntity handlerErrorAuthentication(HttpMessageNotReadableException ex) {
 		return ResponseEntity.status(400).body(ex.getMessage());
 	}
 

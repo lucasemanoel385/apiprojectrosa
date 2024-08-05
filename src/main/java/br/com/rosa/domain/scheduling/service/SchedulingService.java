@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.rosa.domain.scheduling.RepositoryScheduling;
 import br.com.rosa.domain.scheduling.Scheduling;
 import br.com.rosa.domain.scheduling.dto.SchedulingRegister;
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 
 @Service
 public class SchedulingService {
@@ -27,11 +27,11 @@ public class SchedulingService {
 		var diffBetweenDays = ChronoUnit.DAYS.between(dateNow ,data.dateScheduling());
 
 		if (diffBetweenDays > 30) {
-			throw new ValidacaoException("Não é possivel agendar com 30 dias de antecendência");
+			throw new ValidationException("Não é possivel agendar com 30 dias de antecendência");
 		}
 
 		if (diffBetweenDays < 0) {
-			throw new ValidacaoException("Não é possivel agendar na data posterior");
+			throw new ValidationException("Não é possivel agendar na data posterior");
 		}
 		
 		schedulingRepository.save(scheduling);

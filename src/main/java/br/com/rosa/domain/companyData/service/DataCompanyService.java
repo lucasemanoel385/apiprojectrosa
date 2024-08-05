@@ -1,6 +1,6 @@
 package br.com.rosa.domain.companyData.service;
 
-import br.com.rosa.domain.TransformeAndResizeImage;
+import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.companyData.CompanyData;
 import br.com.rosa.domain.companyData.RepositoryDataCompany;
 import br.com.rosa.domain.companyData.dto.DataAccounting;
@@ -72,7 +72,7 @@ public class DataCompanyService {
 
 		var company = repository.getReferenceById(1L);
 
-		var base64imagem = TransformeAndResizeImage.takeImage(company.getImg());
+		var base64imagem = TransformAndResizeImage.takeImage(company.getImg());
 
 		return new GetDataCompany(company, base64imagem);
 

@@ -3,10 +3,11 @@ package br.com.rosa.domain.item.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.rosa.domain.TransformeAndResizeImage;
+import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class ItemService {
 			throw new NullPointerException("Imagem não selecionada");
 		}
 
-		var imgBytes = TransformeAndResizeImage.saveImgItem(file);
+		var imgBytes = TransformAndResizeImage.saveImgItem(file);
 		
 		//Salva o item no banco de dados
 		var item = new Item(dados, category.getId(), imgBytes);
@@ -55,7 +56,7 @@ public class ItemService {
 	public DataItem getItemId(Long id) {
 		var item = repository.getReferenceById(id);
 
-		var base64Image = TransformeAndResizeImage.takeImage(item.getImg());
+		var base64Image = TransformAndResizeImage.takeImage(item.getImg());
 
 		DataItem i = new DataItem(item, base64Image);
 
@@ -76,6 +77,7 @@ public class ItemService {
 		}
 	}
 
+	@Cacheable("items")
 	public Page<DataItem> forListItems(List<Item> items, Pageable page) {
 
 		List<DataItem> listItems = new ArrayList<>();
@@ -83,7 +85,7 @@ public class ItemService {
 		items.forEach(item -> {
 
 			//Pega a imagem da pasta com a ulr salva no banco de dados
-			var base64Image = TransformeAndResizeImage.takeImage(item.getImg());
+			var base64Image = TransformAndResizeImage.takeImage(item.getImg());
 
 			//Criamos a instancia do DTO(Record) e adicionamos na lista
 			DataItem i = new DataItem(item, base64Image);
@@ -107,7 +109,7 @@ public class ItemService {
 		checkAndUpdateNullOrBlank(item, data);
 
 		if(!(file == null)) {
-			item.setImg(TransformeAndResizeImage.saveImgItem(file));
+			item.setImg(TransformAndResizeImage.saveImgItem(file));
 		}
 
 		repository.save(item);

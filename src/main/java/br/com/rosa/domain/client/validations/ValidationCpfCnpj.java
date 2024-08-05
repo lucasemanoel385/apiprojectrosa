@@ -1,6 +1,6 @@
 package br.com.rosa.domain.client.validations;
 
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
@@ -13,10 +13,10 @@ public class ValidationCpfCnpj {
 		if(cpfCnpj.length() >12) {
 			//Jurídico
 			if (!validateCnpj(cpfCnpj)) {
-				throw new ValidacaoException("CNPJ inválido");
+				throw new ValidationException("CNPJ inválido");
 			}
 			} else if (!validateCpf(cpfCnpj)) {
-			throw new ValidacaoException("CPF inválido");
+			throw new ValidationException("CPF inválido");
 			}
 	}
 

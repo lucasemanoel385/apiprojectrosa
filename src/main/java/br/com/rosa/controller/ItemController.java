@@ -1,6 +1,6 @@
 package br.com.rosa.controller;
 
-import br.com.rosa.domain.TransformeAndResizeImage;
+import br.com.rosa.domain.TransformAndResizeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,10 +56,9 @@ public class ItemController {
 	}
 
 	@GetMapping("all")
-	public ResponseEntity<Page<DataItem>> getAllItens(@PageableDefault(sort = "name", size = 10000, direction = Direction.DESC) Pageable page) {
+	public ResponseEntity<Page<DataItem>> getAllItens(@PageableDefault(sort = "name", size = 100000, direction = Direction.DESC) Pageable page) {
 
 		var listItens = service.forListItems(repository.findAll() ,page);
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -85,7 +84,7 @@ public class ItemController {
 
 		var item = service.updateItem(dados, file);
 		
-		return ResponseEntity.ok().body(new DataItem(item, TransformeAndResizeImage.takeImage(item.getImg())));
+		return ResponseEntity.ok().body(new DataItem(item, TransformAndResizeImage.takeImage(item.getImg())));
 		
 	}
 	

@@ -10,17 +10,15 @@ import br.com.rosa.domain.client.validations.ValidateRgAndCpf;
 import br.com.rosa.domain.client.validations.ValidationCpfCnpj;
 import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -81,10 +79,10 @@ class ClientServiceTest {
 
         var client = dtoClientRegister("09068306641");
 
-        doThrow(new ValidacaoException("CPF inválido"))
+        doThrow(new ValidationException("CPF inválido"))
                 .when(validationCpfCnpj).validateCnpjCpf(client.cpf());
 
-        ValidacaoException exception =  Assertions.assertThrows(ValidacaoException.class, () -> {
+        ValidationException exception =  Assertions.assertThrows(ValidationException.class, () -> {
             validationCpfCnpj.validateCnpjCpf(client.cpf());
         });
         Assertions.assertEquals("CPF inválido", exception.getMessage());
@@ -147,10 +145,10 @@ class ClientServiceTest {
                 "Santa Luzia", "Sao Benedito","Rua monte calvario",
                 "322","MG",null, null, null);
 
-        doThrow(new ValidacaoException("CPF inválido"))
+        doThrow(new ValidationException("CPF inválido"))
                 .when(validationCpfCnpj).validateCnpjCpf(clientUpdate.cpfCnpj());
 
-        ValidacaoException exception =  Assertions.assertThrows(ValidacaoException.class, () -> {
+        ValidationException exception =  Assertions.assertThrows(ValidationException.class, () -> {
             validationCpfCnpj.validateCnpjCpf(clientUpdate.cpfCnpj());
         });
 

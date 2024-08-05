@@ -4,13 +4,11 @@ import br.com.rosa.domain.itemContract.ItemContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.rosa.domain.contract.Contract;
 import br.com.rosa.domain.contract.enunm.SituationContract;
 import br.com.rosa.domain.item.RepositoryItem;
 import br.com.rosa.domain.itemContract.RepositoryItemContract;
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -35,7 +33,7 @@ public class ValidateAvailableItemByDate implements ValidateContractRent {
 
             if (!(itemStock.getAmount() >= listIten.getAmount())) {
 
-                throw new ValidacaoException("Unidades do item: " + itemStock.getName() + " ultrapassada. Estoque total: " + itemStock.getAmount());
+                throw new ValidationException("Unidades do item: " + itemStock.getName() + " ultrapassada. Estoque total: " + itemStock.getAmount());
             }
 
             var itemAmountCurrent = listIten.getAmount();
@@ -45,7 +43,7 @@ public class ValidateAvailableItemByDate implements ValidateContractRent {
             if (results >= 0) {
                 itemStock.setAmount(results);
             } else {
-                throw new ValidacaoException("Falta de estoque na data especifica. (" + itemStock + ")");
+                throw new ValidationException("Falta de estoque na data especifica. (" + itemStock + ")");
             }
             itemStock.setAmount(itemReturn);
 

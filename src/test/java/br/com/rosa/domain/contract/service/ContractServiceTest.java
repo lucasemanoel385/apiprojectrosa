@@ -1,14 +1,10 @@
 package br.com.rosa.domain.contract.service;
 
-import br.com.rosa.domain.address.dto.DataAddress;
-import br.com.rosa.domain.client.Client;
-import br.com.rosa.domain.client.dto.ClientRegister;
 import br.com.rosa.domain.contract.Contract;
 import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.domain.contract.dto.ContractItem;
 import br.com.rosa.domain.contract.dto.ContractRegister;
 import br.com.rosa.domain.contract.dto.UpdateContract;
-import br.com.rosa.domain.contract.enunm.SituationContract;
 import br.com.rosa.domain.contract.validations.ValidateAvailableItemByDate;
 import br.com.rosa.domain.contract.validations.ValidateContractRent;
 import br.com.rosa.domain.item.Item;
@@ -16,8 +12,7 @@ import br.com.rosa.domain.item.RepositoryItem;
 import br.com.rosa.domain.item.dto.RegisterItem;
 import br.com.rosa.domain.itemContract.ItemContract;
 import br.com.rosa.domain.itemContract.RepositoryItemContract;
-import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
-import br.com.rosa.infra.exceptions.ValidacaoException;
+import br.com.rosa.infra.exceptions.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -102,7 +97,7 @@ class ContractServiceTest {
 
         when(repositoryItemTest.getReferenceById(item1.getId())).thenReturn(item);
 
-        ValidacaoException exception = Assertions.assertThrows(ValidacaoException.class, () -> {
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> {
             serviceContract.registerContract(contractRegister);
         });
 
@@ -139,7 +134,7 @@ class ContractServiceTest {
 
         when(repositoryItemTest.getReferenceById(any())).thenReturn(item1);
 
-        ValidacaoException exception = Assertions.assertThrows(ValidacaoException.class, () -> {
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> {
             serviceContract.registerContract(contractRegister);
             validateItemByDateTest.validate(listItemss);
         });
@@ -176,7 +171,7 @@ class ContractServiceTest {
 
         when(repositoryItemTest.getReferenceById(any())).thenReturn(item);
 
-        ValidacaoException exception = Assertions.assertThrows(ValidacaoException.class, () -> {
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> {
             serviceContract.registerContract(contractRegister);
             validateItemByDateTest.validate(listItemss);
         });
