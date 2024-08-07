@@ -30,11 +30,11 @@ public class CategoryController {
 	@Transactional
 	public ResponseEntity<DataCategory> registerCategory(@RequestBody RegisterCategory data, UriComponentsBuilder uriBuilder) {
 		
-		var categoria = service.registerCategory(data);
-		
-		var uri = uriBuilder.path("/categoria/{id}").buildAndExpand(categoria.getId()).toUri(); 
-		
-		return ResponseEntity.created(uri).body(new DataCategory(categoria));
+		var category = service.registerCategory(data);
+
+		var uri = uriBuilder.path("/category/{id}").buildAndExpand(category.getId()).toUri();
+
+		return ResponseEntity.created(uri).body(new DataCategory(category));
 		
 	}
 	
@@ -58,7 +58,6 @@ public class CategoryController {
 	@GetMapping("all")
 	public ResponseEntity<Page<DataCategory>> getAllCategory(
 			@PageableDefault(page = 0, size = 10000, sort = "name" ,direction = Sort.Direction.ASC) Pageable page) {
-
 		return ResponseEntity.ok(repository.findAll(page).map(DataCategory::new));
 
 	}
