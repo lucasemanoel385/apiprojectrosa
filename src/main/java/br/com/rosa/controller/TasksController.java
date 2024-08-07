@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,9 @@ public class TasksController {
 	
 	@Autowired
 	private RepositoryTask taskRepository;
+
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 	
 	@PostMapping
 	@Transactional
@@ -35,7 +39,9 @@ public class TasksController {
 		taskRepository.save(task);
 
 		var uri = uriBuilder.path("/task/{id}").buildAndExpand(task.getId()).toUri();
-		
+
+		messagingTemplate.convertAndSend("/topic/task", taskRepository.findAll());
+
 		return ResponseEntity.created(uri).build();
 		
 	}
@@ -51,7 +57,9 @@ public class TasksController {
 	public ResponseEntity deleteTask(@PathVariable Long id) {
 		
 		taskRepository.deleteById(id);
-		
+
+		messagingTemplate.convertAndSend("/topic/task", taskRepository.findAll());
+
 		return ResponseEntity.noContent().build();
 		
 	}

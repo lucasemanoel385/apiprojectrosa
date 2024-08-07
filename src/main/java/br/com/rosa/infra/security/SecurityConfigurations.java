@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -38,6 +39,7 @@ public class SecurityConfigurations {
                  authorizeHttpRequests(authorize -> {
                     //requestMatchers é pra informar se é pra ser bloqueada ou liberada X URL .Se caso vim uma requisção /login do method POST permita e o resto bloquea tuto
                      authorize.requestMatchers(HttpMethod.POST,"/login/**").permitAll().
+                             requestMatchers("/ws/**").permitAll().
                              requestMatchers(HttpMethod.GET, "/task/**").hasAnyRole("ADMIN", "USER").
                              requestMatchers(HttpMethod.POST, "/task/**").hasRole("ADMIN").
                              requestMatchers(HttpMethod.DELETE, "/task/**").hasRole("ADMIN").
@@ -65,6 +67,5 @@ public class SecurityConfigurations {
     public PasswordEncoder passwordEncoder() { //com isso ensinamos pro spring que é esse encoder que sera usado pro hashing de senha
         return new BCryptPasswordEncoder();
     }
-
 
 }
