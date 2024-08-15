@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record RegisterDataPayment(
-        @NotNull
+        @NotNull(message = "Valor não pode estar vazia")
         double paymentValue,
-        @NotNull
+        @NotNull(message = "Data não pode estar vazia")
         LocalDate datePayment
 ) {
 }
