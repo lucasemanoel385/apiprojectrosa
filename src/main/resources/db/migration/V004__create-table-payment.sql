@@ -6,7 +6,7 @@ create table payment(
     contract_id bigint not null,
 
     primary key(id),
-    CONSTRAINT fk_payment_contract_id FOREIGN KEY (contract_id) REFERENCES contract(id)
+    CONSTRAINT fk_payment_contract_id FOREIGN KEY (contract_id) REFERENCES contract(id) ON DELETE CASCADE
 
 
 );
