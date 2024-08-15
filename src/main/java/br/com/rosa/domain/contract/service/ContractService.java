@@ -170,4 +170,9 @@ public class ContractService {
 		return items;
 	}
 
+    public void deleteContractById(Long id) {
+
+		repository.deleteById(id);
+
+	}
 }

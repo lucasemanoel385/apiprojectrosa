@@ -162,7 +162,9 @@ public class ContractController {
 	@DeleteMapping("{id}")
 	@Transactional
 	public ResponseEntity deleteContract(@PathVariable Long id) {
-		repositoryContract.deleteById(id);
+
+		service.deleteContractById(id);
+
 		return ResponseEntity.noContent().build();
 
 	}
