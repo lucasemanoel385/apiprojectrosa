@@ -171,7 +171,12 @@ public class ContractService {
 	}
 
     public void deleteContractById(Long id) {
+		var dateNow = LocalDate.now().minusMonths(6).toString();
+		var yearNow =  LocalDate.now().getYear();
+		var deleteContractsReservedOnDate = yearNow + "-" + "01-28";
 
+		repository.deleteContractsBudgetsFromSixMonthsAgo(dateNow);
+		repository.deleteContractsReservationsFromOneYearAgo(deleteContractsReservedOnDate);
 		repository.deleteById(id);
 
 	}
