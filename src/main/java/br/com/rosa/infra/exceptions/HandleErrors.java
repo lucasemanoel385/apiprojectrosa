@@ -28,7 +28,7 @@ public class HandleErrors {
 		var erros = ex.getFieldErrors();
 
 												//erros me da uma stream e mape-e cada objeto field erro para um objeto erro validacao e me devolvendo uma lista
-		return ResponseEntity.badRequest().body(erros.stream().map(DataErrorNotNull::new).toList());
+		return ResponseEntity.badRequest().body(erros.get(0).getDefaultMessage());
 	}
 
 	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
