@@ -43,6 +43,7 @@ public class SecurityConfigurations {
                              requestMatchers(HttpMethod.GET, "/task/**").hasAnyRole("ADMIN", "USER").
                              requestMatchers(HttpMethod.POST, "/task/**").hasRole("ADMIN").
                              requestMatchers(HttpMethod.DELETE, "/task/**").hasRole("ADMIN").
+                             requestMatchers(HttpMethod.GET, "item/**").hasAnyRole("ADMIN", "USER").
                              requestMatchers(HttpMethod.GET, "/data-company/**").hasAnyRole("ADMIN", "USER").
                              requestMatchers(HttpMethod.GET, "/data-company/accouting/**").hasRole("ADMIN").
                              requestMatchers(HttpMethod.PUT, "/data-company/**").hasRole("ADMIN").
