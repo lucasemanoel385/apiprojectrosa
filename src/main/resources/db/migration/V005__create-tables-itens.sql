@@ -2,7 +2,7 @@ create table itens(
 
     id bigint not null auto_increment,
     cod bigint not null unique,
-    img blob not null,
+    img mediumblob,
 	name varchar(255) not null unique,
     value_item decimal(10,2) not null,
     replacement_value decimal(10,2) not null,
