@@ -18,8 +18,8 @@ public class TransformAndResizeImage {
             //Lê a imagem
             BufferedImage imageOrigin = ImageIO.read(file.getInputStream());
 
-            int imageWidth = 200;
-            int imageHeight = 200;
+            int imageWidth = 400;
+            int imageHeight = 550;
 
             //Redimensiona a imagem com a largura e altura desejada
             BufferedImage imgResized = resizeImage(imageOrigin, imageWidth, imageHeight);
