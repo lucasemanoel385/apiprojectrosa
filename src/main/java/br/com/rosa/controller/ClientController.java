@@ -59,9 +59,9 @@ public class ClientController {
 
 	@GetMapping("filter")
 	public ResponseEntity<Page<DataClient>> getClientsFilter(
-			@PageableDefault(size = 10000, sort = "name_reason" ,direction = Sort.Direction.ASC) Pageable page,
+			@PageableDefault(size = 100, sort = "name_reason" ,direction = Sort.Direction.ASC) Pageable page,
 			@RequestParam(required = false) String search) {
-		System.out.println(search);
+
 		var clientsFilter = service.filterClients(search, page);
 
 		return ResponseEntity.ok(clientsFilter.map(DataClient::new));
