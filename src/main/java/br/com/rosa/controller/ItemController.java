@@ -1,6 +1,8 @@
 package br.com.rosa.controller;
 
 import br.com.rosa.domain.TransformAndResizeImage;
+import br.com.rosa.domain.itemContract.RepositoryItemContract;
+import br.com.rosa.domain.itemContract.dto.DataItemReservedWeek;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +22,18 @@ import br.com.rosa.domain.item.dto.RegisterItem;
 import br.com.rosa.domain.item.service.ItemService;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequestMapping("item")
 public class ItemController {
 	
 	@Autowired
 	private RepositoryItem repository;
+
+	@Autowired
+	private RepositoryItemContract repositoryItemContract;
 	
 	@Autowired
 	private ItemService service;
@@ -66,6 +74,18 @@ public class ItemController {
 
 	}
 
+	@GetMapping("filter")
+	public ResponseEntity<Page<DataItem>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 100) Pageable page
+														, @RequestParam String filter) {
+
+		var listItens = service.forListItems(repository.findAllByNameOrCode(filter) ,page);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		return ResponseEntity.ok().headers(headers).body(listItens);
+
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<DataItem> getItens(@PathVariable Long id) {
 
@@ -94,6 +114,19 @@ public class ItemController {
 		repository.deleteById(id);
 		return ResponseEntity.noContent().build();
 		
+	}
+
+	@GetMapping("reserved-items")
+	public ResponseEntity<List<DataItemReservedWeek>> getAllReservedBetweenDate() {
+
+		var dateMinusSeven = LocalDate.now().minusDays(7).toString();
+
+		var datePlusSeven = LocalDate.now().plusDays(7).toString();
+
+		var reserved = repositoryItemContract.findAllItemsBetweenDate(dateMinusSeven, datePlusSeven).stream().map(DataItemReservedWeek::new).toList();
+
+		return ResponseEntity.ok(reserved);
+
 	}
 
 }
