@@ -1,6 +1,7 @@
 package br.com.rosa.domain.itemContract;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,4 +23,7 @@ public interface RepositoryItemContract extends JpaRepository<ItemContract, Long
 	void deleteById(Long id);
 
     ItemContract getReferenceByIdItem(Long idItem);
+
+	@Query(value = "select * from itens_contract where final_date between :dateMinusSeven and :datePlusSeven and contract_situation = 'RESERVADO'", nativeQuery = true)
+	List<ItemContract> findAllItemsBetweenDate(String dateMinusSeven, String datePlusSeven);
 }
