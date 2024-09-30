@@ -1,6 +1,6 @@
 create table company_data(
     id bigint not null auto_increment,
-    img blob not null,
+    img mediumblob not null,
     reason varchar(255) not null,
     fantasy_name varchar(255) not null,
     cnpj varchar (20) not null,
