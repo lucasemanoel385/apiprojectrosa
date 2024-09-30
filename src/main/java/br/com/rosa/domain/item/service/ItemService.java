@@ -77,7 +77,6 @@ public class ItemService {
 		}
 	}
 
-	@Cacheable("items")
 	public Page<DataItem> forListItems(List<Item> items, Pageable page) {
 
 		List<DataItem> listItems = new ArrayList<>();
