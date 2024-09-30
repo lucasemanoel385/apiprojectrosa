@@ -1,5 +1,6 @@
 package br.com.rosa.infra.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -13,10 +14,13 @@ mas não influencia diretamente o comportamento do Spring Security.*/
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
+	@Value("${url.ip.static.domain}")
+	private String ipStatic;
+
 	@Override
 	public void addCorsMappings(CorsRegistry resgistry) {
 		resgistry.addMapping("/**")
-								.allowedOrigins("http://localhost:4200")
+								.allowedOrigins(ipStatic)
 								.allowedHeaders("*")
 				                .allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS")
 								.allowCredentials(true);
