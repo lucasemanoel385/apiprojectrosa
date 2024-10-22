@@ -118,10 +118,16 @@ public class ContractController {
 
 	}
 
+	@GetMapping("cod/{cod}")
+	public ResponseEntity<List<ListContract>> getItemsReservedInContract(@PathVariable Long cod) {
+
+			return ResponseEntity.ok(service.getItemsReservedInContract(cod));
+	}
+
 	@PatchMapping("payment/{id}")
 	@Transactional
 	public ResponseEntity<List<Payment>> payment(@PathVariable Long id,@Valid @RequestBody RegisterPayment pay) {
-		System.out.println(pay);
+
 		var contract = repositoryContract.getReferenceById(id);
 
 		for (Payment p : contract.getPayment()) {
