@@ -76,6 +76,9 @@ public class ContractService {
 
 		if(data.items() != null) {
 			for (ItemContract test : itensPrevious) {
+				if (!repositoryItem.existsById(test.getIdItem())) {
+					throw new ValidationException("Item excluído ou não existe");
+				}
 				repositoryItemContrato.deleteById(test.getId());
 			}
 			var itens = setItemsContract(data.items(), data.dateOf(), data.dateUntil(), contract.getContractSituation());
@@ -133,9 +136,17 @@ public class ContractService {
 		if(contract.getContractSituation() == SituationContract.RESERVADO) {
 			throw new ValidationException("Contrato já reservado");
 		}
+
+
 		
 		switch (contract.getContractSituation()) {
 			case ORCAMENTO:
+				for (ItemContract test : contract.getItens()) {
+					if (!repositoryItem.existsById(test.getIdItem())) {
+						throw new ValidationException("Item excluído ou não existe");
+					}
+					repositoryItemContrato.deleteById(test.getId());
+				}
 				var itensByContract = contract.getItens();
 				validate.forEach(v -> v.validate(itensByContract));
 				contract.setContractSituation(SituationContract.RESERVADO);
@@ -180,4 +191,18 @@ public class ContractService {
 		repository.deleteById(id);
 
 	}
+
+    public List<ListContract> getItemsReservedInContract(Long cod) {
+
+		var dateNow = LocalDate.now().toString();
+		var t = repository.getItemsContractId(cod, dateNow);
+		List<Contract> listContract = new ArrayList<>();
+		t.forEach(i -> listContract.add(repository.getReferenceById(i)));
+		return listContract.stream().map(ListContract::new).toList();
+		/*var contract = repository.getReferenceById(1l);
+
+		contract.getItens().stream().filter(i -> i.getCod().equals(1l)).filter(i -> i.getContractSituation().equals(SituationContract.RESERVADO))
+				.forEach(a -> System.out.println(a.getName()));*/
+
+    }
 }
