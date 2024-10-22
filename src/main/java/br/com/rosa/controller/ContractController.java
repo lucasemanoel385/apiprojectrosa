@@ -52,17 +52,10 @@ public class ContractController {
 			@PageableDefault(page = 0, size = 5, sort = "start_date" ,direction = Sort.Direction.ASC) Pageable page,
 			@RequestParam(required = false) String search) {
 
-
 		return (search == null) ?
 					ResponseEntity.ok(repositoryContract.findAll(page).map(ListContract::new))
 						:
 							ResponseEntity.ok(repositoryContract.findAllByIdOrByClientNameOrByClientCpf(search, page).map(ListContract::new));
-		/*if (search == null ) {
-			return ResponseEntity.ok(repositoryContract.findAll(page).map(ListContract::new));
-		} else {
-			return ResponseEntity.ok(repositoryContract.findAllByIdOrByClientNameOrByClientCpf(search, page).map(ListContract::new));
-		}
-		//return service.listarContrato(page);*/
 
 	}
 
@@ -147,17 +140,6 @@ public class ContractController {
 		return ResponseEntity.ok(listPayment);
 
 	}
-
-	/*@DeleteMapping("itemContrato/{id}")
-	@Transactional
-	public ResponseEntity deleteItemContract(@PathVariable Long id) {
-	//	var itemExcluido = repositoryItemContrato.getReferenceById(id);
-	//	List<Item> itens = new ArrayList<>();
-	//	contrato.setItens(itens);
-		repositoryItemContrato.deleteById(id);
-		return ResponseEntity.noContent().build();
-
-	}*/
 
 	@PatchMapping("situation")
 	@Transactional
