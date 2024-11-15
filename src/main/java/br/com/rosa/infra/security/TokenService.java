@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import br.com.rosa.domain.user.User;
+import br.com.rosa.infra.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,10 @@ public class TokenService {
 
     public String generateToken(User user) {
         try {
-            System.out.println(secret);
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
                     // Pra identificar a ferramenta/API que é dona pela geração do token
-                    .withIssuer("API Food.pic")
+                    .withIssuer("API RosaDeSarom")
                     //withSubject guarda no token quem é dona/dono desse token gerado
                     .withSubject(user.getLogin())
                     //data pra expiração do token
@@ -46,14 +46,14 @@ public class TokenService {
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)
-                    .withIssuer("API Food.pic")
+                    .withIssuer("API RosaDeSarom")
                     .build()
                     //verifica se esse token que está chegando como parametro está valido de acordo com esse algoritmo e com esse Issuer na hora de verificar o token
                     .verify(tokenJWT)
                     .getSubject();
 
         } catch (JWTVerificationException exception){
-            throw new RuntimeException("Token JWT inválido ou expirado!");
+            throw new ValidationException("Token JWT inválido ou expirado!");
         }
 
     }
