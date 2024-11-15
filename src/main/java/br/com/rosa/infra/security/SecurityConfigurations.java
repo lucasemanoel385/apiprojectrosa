@@ -39,6 +39,7 @@ public class SecurityConfigurations {
                  authorizeHttpRequests(authorize -> {
                     //requestMatchers é pra informar se é pra ser bloqueada ou liberada X URL .Se caso vim uma requisção /login do method POST permita e o resto bloquea tuto
                      authorize.requestMatchers(HttpMethod.POST,"/login/**").permitAll().
+                             requestMatchers("/", "/index.html/**", "/*/*.js", "/*/*.css", "/*/*.png", "/*/*.jpg", "/*/*.jpeg", "/**").permitAll().
                              requestMatchers("/ws/**").permitAll().
                              requestMatchers(HttpMethod.GET, "/task/**").hasAnyRole("ADMIN", "USER").
                              requestMatchers(HttpMethod.POST, "/task/**").hasRole("ADMIN").
