@@ -54,11 +54,11 @@ public interface RepositoryContract extends JpaRepository<Contract, Long>{
 
 	@Modifying
 	@Query(value = "delete FROM contract where date_contract <= :dateNow AND contract_situation = 'ORCAMENTO'", nativeQuery = true)
-	void deleteContractsBudgetsFromSixMonthsAgo(String dateNow);
+	void deleteContractsBudgetsWithinSixMonthsAgo(String dateNow);
 
 	@Modifying
 	@Query(value = "delete FROM contract where final_date <= :dateNow AND contract_situation = 'RESERVADO'", nativeQuery = true)
-	void deleteContractsReservationsFromOneYearAgo(String dateNow);
+	void deleteContractsReservationsWithinOneYearAgo(String dateNow);
 
 	@Query(value = "SELECT \n" +
 			"    i.contract_id\n" +
