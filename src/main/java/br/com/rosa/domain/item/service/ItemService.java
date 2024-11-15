@@ -7,7 +7,6 @@ import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -122,14 +121,11 @@ public class ItemService {
 		if(data.name() != null) {
 			item.setName(data.name());
 		}
-		if(data.value() > 0) {
-			item.setValueItem(data.value());
-		}
 		if(data.replacementValue() > 0) {
 			item.setReplacementValue(data.replacementValue());
 		}
 		if(data.amount() >= 0) {
-			item.setAmount(data.amount());
+			item.setQuantity(data.amount());
 		}
 		if(data.category() != item.getCategory().getName() && repositoryCategory.existsByName(data.category())) {
 

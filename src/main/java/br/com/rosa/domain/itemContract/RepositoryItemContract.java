@@ -12,17 +12,15 @@ import br.com.rosa.domain.contract.enunm.SituationContract;
 public interface RepositoryItemContract extends JpaRepository<ItemContract, Long>{
 
 	@Query("""
-			select coalesce(sum(i.amount), 0)
+			select coalesce(sum(i.quantity), 0)
 			from ItemContract
-			i where i.idItem = :id and i.finalDate >= :dateFirst and i.startDate <= :dateEnd and i.contractSituation = :situacaoContrato
+			i where i.cod = :id and i.finalDate >= :dateFirst and i.startDate <= :dateEnd and i.contractSituation = :situacaoContrato
 			""")
 	Long quantityItemsDate(Long id ,LocalDate dateFirst, LocalDate dateEnd, SituationContract situacaoContrato);
 
 	@Modifying
 	@Query(value = "DELETE FROM itens_contract WHERE id = :id", nativeQuery = true)
 	void deleteById(Long id);
-
-    ItemContract getReferenceByIdItem(Long idItem);
 
 	@Query(value = "select * from itens_contract where final_date between :dateMinusSeven and :datePlusSeven and contract_situation = 'RESERVADO'", nativeQuery = true)
 	List<ItemContract> findAllItemsBetweenDate(String dateMinusSeven, String datePlusSeven);

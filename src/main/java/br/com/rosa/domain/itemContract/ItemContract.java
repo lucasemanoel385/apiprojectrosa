@@ -26,18 +26,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "idItem")
+@EqualsAndHashCode(of = "cod")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //você precisa ignorar os relacionamento lazy do hibernate porque eles vem inicialmente vazios e o jackson vai tentar fazer o parse dele pra json/xml
 public class ItemContract {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long idItem;
 	private Long cod;
 	private String name;
 	private double valueItemContract;
 	private double replacementValue;
-	private Long amount;
+	private Long quantity;
 	private double valueTotalItem;
 	private LocalDate startDate;
 	private LocalDate finalDate;
@@ -52,7 +51,7 @@ public class ItemContract {
 
 		this.name = dados.nome();
 		this.valueItemContract = dados.valor();
-		this.amount = (long) dados.quantidade();
+		this.quantity = (long) dados.quantidade();
 		this.contractSituation = dados.situacaoContrato();
 	}
 	
@@ -64,14 +63,13 @@ public class ItemContract {
 		this.id = id;
 	}
 	
-	public ItemContract(Item item, LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
+	public ItemContract(Item item, double valueItem,LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
 		this.cod = item.getCod();
-		this.idItem = item.getId();
 		this.name = item.getName();
-		this.valueItemContract = item.getValueItem();
+		this.valueItemContract = valueItem;
 		this.replacementValue = item.getReplacementValue();
-		this.amount = item.getAmount();
-		this.valueTotalItem = item.getValueItem() * item.getAmount();
+		this.quantity = item.getQuantity();
+		this.valueTotalItem = valueItem * item.getQuantity();
 		this.startDate = dataInicio;
 		this.finalDate = dataFinal;
 		this.contractSituation = situacaoContrato;
@@ -81,13 +79,13 @@ public class ItemContract {
 
 		this.name = item.getName();
 		this.valueItemContract = item.getValueItemContract();
-		this.amount = item.getAmount();
+		this.quantity = item.getQuantity();
 	}
 
 
 	public ItemContract(String nome2, double valor2, int quantidade2) {
 		this.name = nome2;
 		this.valueItemContract = valor2;
-		this.amount = (long) quantidade2;
+		this.quantity = (long) quantidade2;
 	}
 }

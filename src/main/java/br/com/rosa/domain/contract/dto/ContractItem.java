@@ -13,11 +13,13 @@ import lombok.NoArgsConstructor;
 public class ContractItem {
 	
 	private Long id;
+	private double valueItem;
 	private Long amount;
 	private double total;
 	
-	public ContractItem(Long id, Long amount, double total) {
+	public ContractItem(Long id, double valueItem,Long amount, double total) {
 		this.id = id;
+		this.valueItem = valueItem;
 		this.amount = amount;
 		this.total = total;
 	}

@@ -26,26 +26,26 @@ public class ValidateAvailableItemByDate implements ValidateContractRent {
         for (ItemContract listIten : listItens) {
 
             // Usar a query do existe nessa de encontrar os itens
-            var itemData = repositoryItemContract.quantityItemsDate(listIten.getIdItem(),
+            var itemData = repositoryItemContract.quantityItemsDate(listIten.getCod(),
                     listIten.getStartDate(), listIten.getFinalDate(), SituationContract.RESERVADO);
 
-            var itemStock = repositoryItem.getReferenceById(listIten.getIdItem());
+            var itemStock = repositoryItem.getReferenceById(listIten.getCod());
 
-            if (!(itemStock.getAmount() >= listIten.getAmount())) {
+            if (!(itemStock.getQuantity() >= listIten.getQuantity())) {
 
-                throw new ValidationException("Unidades do item: " + itemStock.getName() + " ultrapassada. Estoque total: " + itemStock.getAmount());
+                throw new ValidationException("Unidades do item: " + itemStock.getName() + " ultrapassada. Estoque total: " + itemStock.getQuantity());
             }
 
-            var itemAmountCurrent = listIten.getAmount();
-            var itemReturn = itemStock.getAmount();
-            var results = (itemStock.getAmount() - itemAmountCurrent - itemData);
+            var itemAmountCurrent = listIten.getQuantity();
+            var itemReturn = itemStock.getQuantity();
+            var results = (itemStock.getQuantity() - itemAmountCurrent - itemData);
 
             if (results >= 0) {
-                itemStock.setAmount(results);
+                itemStock.setQuantity(results);
             } else {
                 throw new ValidationException("Falta de estoque na data especifica. (" + itemStock + ")");
             }
-            itemStock.setAmount(itemReturn);
+            itemStock.setQuantity(itemReturn);
 
         }
 

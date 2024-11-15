@@ -44,7 +44,7 @@ public class ItemController {
 		
 		var item = service.createItem(file, dados);
 
-		var uri = uriBuilder.path("/item/{id}").buildAndExpand(item.getId()).toUri(); 
+		var uri = uriBuilder.path("/item/{id}").buildAndExpand(item.getCod()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 	}
@@ -75,7 +75,7 @@ public class ItemController {
 	}
 
 	@GetMapping("filter")
-	public ResponseEntity<Page<DataItem>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 100) Pageable page
+	public ResponseEntity<Page<DataItem>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 50) Pageable page
 														, @RequestParam String filter) {
 
 		var listItens = service.forListItems(repository.findAllByNameOrCode(filter) ,page);

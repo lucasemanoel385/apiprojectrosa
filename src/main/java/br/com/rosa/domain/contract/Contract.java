@@ -82,7 +82,7 @@ public class Contract {
 	private double valueAllItems(Set<ItemContract> itens) {
 		double valor = (float) 0;
 		for (ItemContract itemContrato : itens) {
-			valor += itemContrato.getValueItemContract() * itemContrato.getAmount();
+			valor += itemContrato.getValueItemContract() * itemContrato.getQuantity();
 		}
 		return valor;
 	}

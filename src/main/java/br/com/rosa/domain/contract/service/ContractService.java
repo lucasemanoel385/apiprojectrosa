@@ -74,8 +74,8 @@ public class ContractService {
 
 		if (contract.getContractSituation() == SituationContract.RESERVADO) {
 			for (ItemContract x : itensPrevious) {
-				if (itemsCurrent.containsKey(x.getIdItem())) {
-					itemsCurrent.get(x.getIdItem()).setValueItemContract(x.getValueItemContract());
+				if (itemsCurrent.containsKey(x.getCod())) {
+					itemsCurrent.get(x.getCod()).setValueItemContract(x.getValueItemContract());
 				}
 			}
 		}
@@ -108,9 +108,9 @@ public class ContractService {
 		List<DataItemsContract> itemsContract = new ArrayList<>();
 
 		contract.getItens().forEach((i) -> {
-			var img = repositoryItem.existsById(i.getIdItem()) ? repositoryItem.getReferenceById(i.getIdItem()).getImg() : null;
-			itemsContract.add(new DataItemsContract(i.getIdItem(), i.getCod(), i.getName(),
-					i.getAmount(), i.getValueItemContract(),
+			var img = repositoryItem.existsById(i.getCod()) ? repositoryItem.getReferenceById(i.getCod()).getImg() : null;
+			itemsContract.add(new DataItemsContract(i.getCod(), i.getCod(), i.getName(),
+					i.getQuantity(), i.getValueItemContract(),
 					i.getValueTotalItem(), i.getReplacementValue(), TransformAndResizeImage.takeImage(img)));
 		});
 
@@ -148,12 +148,12 @@ public class ContractService {
 			Item item = null;
 			ItemContract itemContrato = null;
             item = repositoryItem.getReferenceById(t.getId());
-            itemContrato = new ItemContract(item, dateOf, dateUntil, contractSituation);
-            itemContrato.setAmount(t.getAmount());
-			if (items.containsKey(itemContrato.getIdItem())) {
+            itemContrato = new ItemContract(item, t.getValueItem(), dateOf, dateUntil, contractSituation);
+            itemContrato.setQuantity(t.getAmount());
+			if (items.containsKey(itemContrato.getCod())) {
 				throw new ValidationException("Itens iguais, favor remover o item duplicado.");
 			}
-            items.put(itemContrato.getIdItem(), itemContrato);
+            items.put(itemContrato.getCod(), itemContrato);
         }
 		
 		return items;
@@ -164,8 +164,8 @@ public class ContractService {
 		var yearNow =  LocalDate.now().getYear();
 		var deleteContractsReservedOnDate = yearNow + "-" + "01-01";
 
-		repository.deleteContractsBudgetsFromSixMonthsAgo(dateNow);
-		repository.deleteContractsReservationsFromOneYearAgo(deleteContractsReservedOnDate);
+		repository.deleteContractsBudgetsWithinSixMonthsAgo(dateNow);
+		repository.deleteContractsReservationsWithinOneYearAgo(deleteContractsReservedOnDate);
 		repository.deleteById(id);
 
 	}

@@ -6,8 +6,6 @@ import br.com.rosa.domain.categoryItem.Category;
 import br.com.rosa.domain.item.dto.RegisterItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -28,43 +26,40 @@ import lombok.Setter;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Item {
 	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Id
 	private Long cod;
 	private byte[] img;
 	private String name;
-	private double valueItem;
 	private double replacementValue;
-	private Long amount;
+	private Long quantity;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "categoria_id")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Category category;
 	
-	public Item(RegisterItem dados, Long idCategory, byte[] img) {
+	public Item(RegisterItem data, Long idCategory, byte[] img) {
 		this.img = img;
-		this.cod = (long) dados.cod();
-		this.name = dados.name();
-		this.valueItem = dados.value();
-		this.replacementValue = dados.replacementValue();
-		this.amount = (long) dados.amount();
+		this.cod = (long) data.cod();
+		this.name = data.name();
+		this.replacementValue = data.replacementValue();
+		this.quantity = (long) data.amount();
 		this.category = new Category(idCategory);
 	}
 	
-	public Item(int id) {
+	/*public Item(int id) {
 		this.id = (long) id;
 	}
 	
 	public Item(Long id) {
 		this.id = id;
-	}
+	}*/
 
 	public Item(Item item) {
 		this.cod = item.getCod();
 		this.name = item.getName();
-		this.valueItem = item.getValueItem();
 
-		this.amount = item.getAmount();
+
+		this.quantity = item.getQuantity();
 		this.category = new Category(item.getCategory().getId());
 	}
 
@@ -73,16 +68,15 @@ public class Item {
 		
 	}
 
-	public Item(String nome2, double valor2, Long quantidade2, Long id2) {
+	public Item(String nome2, Long quantidade2, Long id2) {
 		this.name = nome2;
-		this.valueItem = valor2;
-		this.amount = quantidade2;
+		this.quantity = quantidade2;
 		this.category = new Category(id2);
 	}
 	
 	@Override
 	public String toString() {
-		return "Cód do item: " + this.cod + " - Nome do item: " + this.name + " - Estoque total de unidades: " + this.amount;
+		return "Cód do item: " + this.cod + " - Nome do item: " + this.name + " - Estoque total de unidades: " + this.quantity;
 	}
 	
 }
