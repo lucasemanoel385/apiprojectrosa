@@ -14,10 +14,13 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Value("${url.ip.static.domain}")
     private String ipStatic;
 
+    @Value("${url.ip.static.domain.two}")
+    private String ipStaticTwo;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins(ipStatic)
+                .setAllowedOrigins(ipStatic, ipStaticTwo)
                 .withSockJS();
     }
 
