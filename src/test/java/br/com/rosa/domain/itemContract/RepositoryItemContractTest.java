@@ -66,7 +66,7 @@ class RepositoryItemContractTest {
             entity.persist(category);
         }
 
-        var registerItem = new RegisterItem(1L, "test", 10, 20, 1, "test");
+        var registerItem = new RegisterItem(1L, "test", 20, 1, "test");
 
         var item = new Item(registerItem, category.getId(), mockFile.getBytes());
         entity.persist(item);
@@ -80,11 +80,11 @@ class RepositoryItemContractTest {
         var contract = new Contract(contractRegister, LocalDate.now(), listItemss);
         contract.setContractSituation(SituationContract.RESERVADO);
 
-        var itemContract = new ItemContract(item, contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
+        var itemContract = new ItemContract(item, 20.20,contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
         listItemss.add(itemContract);
         entity.persist(contract);
 
-        var amountItens = repositoryItemContractTest.quantityItemsDate(item.getId(),
+        var amountItens = repositoryItemContractTest.quantityItemsDate(item.getCod(),
                 LocalDate.of(2024, 7, 13), LocalDate.of(2024, 7, 14),
                 SituationContract.RESERVADO);
 

@@ -21,4 +21,6 @@ public interface RepositoryItem extends JpaRepository<Item, Long>{
 
     @Query(value = "select count(*) from itens i where i.categoria_id = :id", nativeQuery = true)
     Long existsByItemWithCategoryId(Long id);
+
+    Item getReferenceByCod(Long id);
 }

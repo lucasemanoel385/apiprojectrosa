@@ -51,7 +51,7 @@ public class ItemController {
 	
 	@GetMapping
 	public ResponseEntity<Page<DataItem>> getItens(
-			@PageableDefault(page = 0 ,sort = "name",size = 5, direction = Direction.ASC) Pageable page,
+			@PageableDefault(page = 0 ,sort = "cod",size = 5, direction = Direction.DESC) Pageable page,
 			@RequestParam(required = false) String search) {
 
 		var listItens = service.listItems(page, search);

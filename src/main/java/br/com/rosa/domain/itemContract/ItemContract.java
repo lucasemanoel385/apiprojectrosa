@@ -55,13 +55,13 @@ public class ItemContract {
 		this.contractSituation = dados.situacaoContrato();
 	}
 	
-	public ItemContract(int id) {
+	/*public ItemContract(int id) {
 		this.id = (long) id;
 	}
 	
 	public ItemContract(Long id) {
 		this.id = id;
-	}
+	}*/
 	
 	public ItemContract(Item item, double valueItem,LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
 		this.cod = item.getCod();

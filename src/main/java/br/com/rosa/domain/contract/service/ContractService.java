@@ -109,7 +109,7 @@ public class ContractService {
 
 		contract.getItens().forEach((i) -> {
 			var img = repositoryItem.existsById(i.getCod()) ? repositoryItem.getReferenceById(i.getCod()).getImg() : null;
-			itemsContract.add(new DataItemsContract(i.getCod(), i.getCod(), i.getName(),
+			itemsContract.add(new DataItemsContract(i.getId(), i.getCod(), i.getName(),
 					i.getQuantity(), i.getValueItemContract(),
 					i.getValueTotalItem(), i.getReplacementValue(), TransformAndResizeImage.takeImage(img)));
 		});
@@ -143,11 +143,11 @@ public class ContractService {
 		
 		Map<Long, ItemContract> items = new HashMap<>();
 
-
         for (ContractItem t : dataItems) {
+			System.out.println(t.getId());
 			Item item = null;
 			ItemContract itemContrato = null;
-            item = repositoryItem.getReferenceById(t.getId());
+            item = repositoryItem.getReferenceByCod(t.getId());
             itemContrato = new ItemContract(item, t.getValueItem(), dateOf, dateUntil, contractSituation);
             itemContrato.setQuantity(t.getAmount());
 			if (items.containsKey(itemContrato.getCod())) {

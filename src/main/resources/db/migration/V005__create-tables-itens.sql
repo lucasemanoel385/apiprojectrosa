@@ -2,7 +2,7 @@ create table itens(
 
     cod bigint not null unique,
     img mediumblob,
-	name varchar(255) not null unique,
+	name varchar(500) not null unique,
     replacement_value decimal(10,2) not null,
     quantity int not null,
     categoria_id bigint not null,

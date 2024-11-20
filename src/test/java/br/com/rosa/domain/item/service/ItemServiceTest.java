@@ -58,7 +58,7 @@ class ItemServiceTest {
     @DisplayName("Should success if item save in repository")
     void createItem01() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
 
         var mockFile = returnImgFake();
 
@@ -82,7 +82,7 @@ class ItemServiceTest {
     @DisplayName("Should throw ValidationException if format img invalid")
     void createItem02() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
 
         // Criação de um arquivo de imagem fake
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", new byte[]{1, 2, 3, 4});
@@ -103,7 +103,7 @@ class ItemServiceTest {
     @DisplayName("Should return SqlConstraintViolationException")
     void createItem03() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
 
         doThrow(new SqlConstraintViolationException("Código do produto já existe")).when(
                 validateIfExistsTest).validateRegisterItem(dtoItem.cod(), dtoItem.category(), dtoItem.name());
@@ -122,7 +122,7 @@ class ItemServiceTest {
 
         List<Item> items = new ArrayList<>();
         var mockFile = returnImgFake();
-        items.add(new Item(new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory"),
+        items.add(new Item(new RegisterItem(1L, "test", 20.30, 1, "testCategory"),
                 1L, mockFile.getBytes()));
 
         List<DataItem> listItems = new ArrayList<>();
@@ -156,7 +156,7 @@ class ItemServiceTest {
 
         var mockFile = returnImgFake();
 
-        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
 
         var item = new Item(dtoItem, 1L, mockFile.getBytes());
 
@@ -179,7 +179,7 @@ class ItemServiceTest {
 
         var mockFile = returnImgFake();
 
-        var dtoItem = new RegisterItem(1L, "test", 10.15, 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
 
         var item = new Item(dtoItem, 1L, mockFile.getBytes());
 

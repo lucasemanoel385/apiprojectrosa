@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "cod")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Item {
 	
@@ -46,13 +46,13 @@ public class Item {
 		this.category = new Category(idCategory);
 	}
 	
-	/*public Item(int id) {
-		this.id = (long) id;
+	public Item(int id) {
+		this.cod = (long) id;
 	}
 	
 	public Item(Long id) {
-		this.id = id;
-	}*/
+		this.cod = id;
+	}
 
 	public Item(Item item) {
 		this.cod = item.getCod();
@@ -61,6 +61,14 @@ public class Item {
 
 		this.quantity = item.getQuantity();
 		this.category = new Category(item.getCategory().getId());
+	}
+
+	public Item(Long codigo, String descricao, double v, Long quantidade, Long idCategory) {
+		this.cod = codigo;
+		this.name = descricao;
+		this.replacementValue = v;
+		this.quantity = quantidade;
+		this.category = new Category(idCategory);
 	}
 
 	public void setCategory(Long categoria2) {

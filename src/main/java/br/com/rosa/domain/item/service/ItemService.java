@@ -39,9 +39,9 @@ public class ItemService {
 
 		var category = repositoryCategory.getReferenceByName(dados.category());
 
-		if(file == null) {
+		/*if(file == null) {
 			throw new NullPointerException("Imagem não selecionada");
-		}
+		}*/
 
 		var imgBytes = TransformAndResizeImage.saveImgItem(file);
 		
@@ -66,7 +66,7 @@ public class ItemService {
 
 		if (search == null || search.isEmpty()) {
 
-			var itemsParam = repository.findAll(Sort.by("name"));
+			var itemsParam = repository.findAll(Sort.by("cod"));
 			return forListItems(itemsParam, page);
 
 		} else {

@@ -84,18 +84,18 @@ class ContractServiceTest {
     void registerContract02() throws IOException {
 
         List<ContractItem> listItems = new ArrayList<>();
-        var item1 = new ContractItem(1L, 1L, 10);
-        var item2 = new ContractItem(1L, 2L, 10);
+        var item1 = new ContractItem(1L, 10,1L, 10);
+        var item2 = new ContractItem(1L, 5,2L, 10);
         listItems.add(item1);
         listItems.add(item2);
 
         var mockFile = returnImgFake();
-        var registerItem = new RegisterItem(1L, "teste", 10, 20, 1, "teste");
+        var registerItem = new RegisterItem(1L, "teste", 10, 1, "teste");
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
         var contractRegister = dtoRegisterContract(listItems);
 
-        when(repositoryItemTest.getReferenceById(item1.getId())).thenReturn(item);
+        when(repositoryItemTest.getReferenceByCod(item1.getId())).thenReturn(item);
 
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> {
             serviceContract.registerContract(contractRegister);
@@ -118,15 +118,15 @@ class ContractServiceTest {
 
         var mockFile = returnImgFake();
 
-        var registerItem = new RegisterItem(1L, "teste", 10, 20, 2, "teste");
+        var registerItem = new RegisterItem(1L, "teste", 20, 2, "teste");
 
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
-        var registerItem1 = new RegisterItem(1L, "teste", 10, 20, 1, "teste");
+        var registerItem1 = new RegisterItem(1L, "teste", 20, 1, "teste");
 
         var item1 = new Item(registerItem1, 1L, mockFile.getBytes());
 
-        var itemContract = new ItemContract(item, contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
+        var itemContract = new ItemContract(item, 10,contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
 
         listItemss.add(itemContract);
 
@@ -159,11 +159,11 @@ class ContractServiceTest {
 
         var mockFile = returnImgFake();
 
-        var registerItem = new RegisterItem(1L, "teste", 10, 20, 2, "teste");
+        var registerItem = new RegisterItem(1L, "teste", 20, 2, "teste");
 
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
-        var itemContract = new ItemContract(item, contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
+        var itemContract = new ItemContract(item, 10,contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
 
         listItemss.add(itemContract);
 
