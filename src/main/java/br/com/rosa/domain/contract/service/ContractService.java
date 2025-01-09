@@ -120,20 +120,21 @@ public class ContractService {
 
 	private void updateSituationContract(Contract contract) {
 		
-		if(contract.getContractSituation() == SituationContract.RESERVADO) {
+		/*if(contract.getContractSituation() == SituationContract.RESERVADO) {
 			throw new ValidationException("Contrato já reservado");
-		}
+		}*/
 		switch (contract.getContractSituation()) {
-			case ORCAMENTO:
+            case ORCAMENTO:
 				var itensByContract = contract.getItens();
 				validate.forEach(v -> v.validate(itensByContract));
 				contract.setContractSituation(SituationContract.RESERVADO);
 				contract.setDateContract(LocalDate.now());
 				contract.getItens().forEach(item -> item.setContractSituation(SituationContract.RESERVADO));
 			break;
-			
-		case CONCLUIDO: 
-			repository.deleteById(contract.getId());
+			case RESERVADO:
+				throw new ValidationException("Contrato já reservado");
+            case CONCLUIDO:
+				repository.deleteById(contract.getId());
 			break;
 		}
 	}
@@ -144,7 +145,6 @@ public class ContractService {
 		Map<Long, ItemContract> items = new HashMap<>();
 
         for (ContractItem t : dataItems) {
-			System.out.println(t.getId());
 			Item item = null;
 			ItemContract itemContrato = null;
             item = repositoryItem.getReferenceByCod(t.getId());
@@ -172,8 +172,7 @@ public class ContractService {
 
     public List<ListContract> getItemsReservedInContract(Long cod) {
 
-		var dateNow = LocalDate.now().toString();
-		var t = repository.getItemsContractId(cod, dateNow);
+		var t = repository.getItemsContractId(cod);
 		List<Contract> listContract = new ArrayList<>();
 		t.forEach(i -> listContract.add(repository.getReferenceById(i)));
 		return listContract.stream().map(ListContract::new).toList();

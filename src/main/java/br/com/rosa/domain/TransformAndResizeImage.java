@@ -15,6 +15,10 @@ public class TransformAndResizeImage {
 
         try {
 
+            if(file == null) {
+                return null;
+            }
+
             //Lê a imagem
             BufferedImage imageOrigin = ImageIO.read(file.getInputStream());
 

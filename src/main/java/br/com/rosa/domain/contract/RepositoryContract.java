@@ -60,7 +60,7 @@ public interface RepositoryContract extends JpaRepository<Contract, Long>{
 	@Query(value = "delete FROM contract where final_date <= :dateNow AND contract_situation = 'RESERVADO'", nativeQuery = true)
 	void deleteContractsReservationsWithinOneYearAgo(String dateNow);
 
-	@Query(value = "SELECT \n" +
+	/*@Query(value = "SELECT \n" +
 			"    i.contract_id\n" +
 			"FROM \n" +
 			"    contract_itens i\n" +
@@ -68,5 +68,16 @@ public interface RepositoryContract extends JpaRepository<Contract, Long>{
 			"    itens_contract ic ON ic.id = i.itens_id\n" +
 			"WHERE \n" +
 			"    ic.contract_situation = 'RESERVADO' and ic.cod = :cod and ic.start_date >= :dateNow", nativeQuery = true)
-	List<Long> getItemsContractId(Long cod, String dateNow);
+	List<Long> getItemsContractId(Long cod, String dateNow);*/
+
+
+	@Query(value = "SELECT \n" +
+			"    i.contract_id\n" +
+			"FROM \n" +
+			"    contract_itens i\n" +
+			"JOIN \n" +
+			"    itens_contract ic ON ic.id = i.itens_id\n" +
+			"WHERE \n" +
+			"    ic.contract_situation = 'RESERVADO' and ic.cod = :cod", nativeQuery = true)
+	List<Long> getItemsContractId(Long cod);
 }
