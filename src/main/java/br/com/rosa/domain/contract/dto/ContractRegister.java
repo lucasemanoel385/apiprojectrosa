@@ -12,6 +12,8 @@ public record ContractRegister(
 		LocalDate dateOf,
 		@FutureOrPresent(message = "Deve ser uma data presente ou futura")
 		LocalDate dateUntil,
+		LocalDate dateTrialDress,
+		LocalDate dateEvent,
 		double discount,
 		String seller,
 		@NotNull(message = "Não é possivel ter 0 itens")

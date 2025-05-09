@@ -16,6 +16,8 @@ public record DataContract(
 		LocalDate dateContract,
 		LocalDate dateOf,
 		LocalDate dateUntil,
+		LocalDate dateTrialDress,
+		LocalDate dateEvent,
 		List<Payment> payment,
 		double value,
 		double discount,
@@ -29,7 +31,7 @@ public record DataContract(
 	) {
 	public DataContract(Contract contract, List<DataItemsContract> items) {
 		this(contract.getId(), contract.getClient(), contract.getDateContract(),contract.getStartDate(), contract.getFinalDate(),
-				 contract.getPayment(), contract.getValue(), contract.getDiscount(), contract.getValueTotal(), contract.getContractSituation(),
+				 contract.getDateTrialDress(), contract.getDateEvent(), contract.getPayment(), contract.getValue(), contract.getDiscount(), contract.getValueTotal(), contract.getContractSituation(),
 				contract.getSeller().getSeller(), contract.getObservation(), contract.getAnnotations(), items);
 	}
 
