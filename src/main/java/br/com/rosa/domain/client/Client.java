@@ -62,34 +62,28 @@ public class Client extends People {
 		if(data.cpfCnpj() != null && !this.getCpfCnpj().equals(data.cpfCnpj())) {
 			this.setCpfCnpj(data.cpfCnpj());
 		}
-		if(data.rgStateRegistration() != null && !this.getRgStateRegistration().equals(data.rgStateRegistration())) {
-			this.setRgStateRegistration(data.rgStateRegistration());
-		}
-		if(data.dateBirthCompanyFormation() != null && !this.getDateBirthCompanyFormation().equals(data.dateBirthCompanyFormation())) {
-			this.setDateBirthCompanyFormation(data.dateBirthCompanyFormation());
-		}
+
+		this.setRgStateRegistration(data.rgStateRegistration());
+
+		this.setDateBirthCompanyFormation(data.dateBirthCompanyFormation());
+
 		if(data.email() != null && !this.getEmail().equals(data.email())) {
 			super.setEmail(data.email());
 		}
 		if(data.cep() != null && !this.getAddress().getCep().equals(data.cep())) {
 			super.getAddress().setCep(data.cep());
-			//super.setAddrees(new Endereco(dados.endereco()));
 		}
 		if(data.street() != null && !this.getAddress().getStreet().equals(data.street())) {
 			super.getAddress().setStreet(data.street());
-			//super.setAddrees(new Endereco(dados.endereco()));
 		}
 		if(data.city() != null && !this.getAddress().getCity().equals(data.city())) {
 			super.getAddress().setCity(data.city());
-			//super.setAddrees(new Endereco(dados.endereco()));
 		}
 		if(data.district() != null && !this.getAddress().getDistrict().equals(data.district())) {
 			super.getAddress().setDistrict(data.district());
-			//super.setAddrees(new Endereco(dados.endereco()));
 		}
 		if(data.number() != null && !this.getAddress().getNumber().equals(data.number())) {
 			super.getAddress().setNumber(data.number());
-			//super.setAddrees(new Endereco(dados.endereco()));
 		}
 		if(data.phone1() != null) {
 			super.setPhone1(data.phone1());
@@ -98,7 +92,9 @@ public class Client extends People {
 		if(data.phone2() != null) {
 			super.setPhone2(data.phone2());
 		}
-
+		if(data.complement() != null) {
+			super.getAddress().setComplement(data.complement());
+		}
 		
 	}
 	
