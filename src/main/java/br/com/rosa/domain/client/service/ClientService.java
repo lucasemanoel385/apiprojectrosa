@@ -30,7 +30,7 @@ public class ClientService {
 
         validateRgAndCpfCnpj.ValidateCreateClientCpfAndRg(data.cpf(), data.rg());
 
-        var address = new DataAddress(data.cep(), data.street(), data.number(), data.district(), data.city(), data.uf());
+        var address = new DataAddress(data.cep(), data.street(), data.number(), data.district(), data.complement(),data.city(), data.uf());
         var client = new Client(data, address);
 
         repositoryCliente.save(client);

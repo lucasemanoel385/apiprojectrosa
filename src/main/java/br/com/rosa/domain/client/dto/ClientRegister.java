@@ -7,11 +7,9 @@ import java.time.LocalDate;
 public record ClientRegister(
 		@NotNull(message = "Não pode ser nulo")
 		String name,
-		@NotNull(message = "Não pode ser nulo")
 		LocalDate dateBirth,
 		@NotNull(message = "Não pode ser nulo")
 		String cpf,
-		@NotNull(message = "Não pode ser nulo")
 		String rg,
 		@NotNull(message = "Não pode ser nulo")
 		String cep,
@@ -19,6 +17,7 @@ public record ClientRegister(
 		String city,
 		@NotNull(message = "Não pode ser nulo")
 		String district,
+		String complement,
 		@NotNull(message = "Não pode ser nulo")
 		String street,
 		@NotNull(message = "Não pode ser nulo")
