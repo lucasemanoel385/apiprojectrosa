@@ -16,6 +16,7 @@ public class Address {
 	private String cep;
 	private String city;
 	private String district;
+	private String complement;
 	private String street;
 	private String number;
 	private String uf;
@@ -24,6 +25,7 @@ public class Address {
 		this.cep = data.cep();
 		this.street = data.street();
 		this.district = data.district();
+		this.complement = data.complement();
 		this.city = data.city();
 		this.number = data.number();
 		this.uf = data.uf();
