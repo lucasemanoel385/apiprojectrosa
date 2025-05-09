@@ -41,6 +41,8 @@ public class Contract {
 	private LocalDate dateContract;
 	private LocalDate startDate;
 	private LocalDate finalDate;
+	private LocalDate dateTrialDress;
+	private LocalDate dateEvent;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<ItemContract> itens = new HashSet<>();
 	private double value;
@@ -61,6 +63,8 @@ public class Contract {
 		this.dateContract = dateNow;
 		this.startDate = data.dateOf();
 		this.finalDate = data.dateUntil();
+		this.dateTrialDress = data.dateTrialDress();
+		this.dateEvent = data.dateEvent();
 		this.itens = items;
 		this.value = this.valueAllItems(items);
 		this.discount = data.discount();
@@ -80,7 +84,7 @@ public class Contract {
 	}
 	
 	private double valueAllItems(Set<ItemContract> itens) {
-		double valor = (float) 0;
+		double valor = 0;
 		for (ItemContract itemContrato : itens) {
 			valor += itemContrato.getValueItemContract() * itemContrato.getQuantity();
 		}
@@ -97,12 +101,14 @@ public class Contract {
 		if(data.dateUntil() != null && !(this.finalDate.equals(data.dateUntil()))) {
 			this.finalDate = data.dateUntil();
 		}
+
 		if(data.discount() >= 0 && !(this.discount == data.discount())) {
 			this.discount = data.discount();
 		}
 		if(data.items() != null) {
 			this.value = this.valueAllItems(itens);
 			this.valueTotal =  this.valorTotal(this.discount, this.valueAllItems(itens));
+
 		}
 		if(data.observation() != null && !(this.observation.equals(data.observation()))) {
 			this.observation = data.observation();
@@ -117,7 +123,7 @@ public class Contract {
 	
 	private double valorTotal(double desconto, double valor) {
 		return (desconto == -1 || desconto == 0) ?
-				this.value : this.value - ((valor * desconto) / 100);
+				this.value : valor - desconto;
 		
 	}
 }
