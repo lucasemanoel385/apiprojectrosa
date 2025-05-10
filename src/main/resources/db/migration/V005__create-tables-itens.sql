@@ -1,6 +1,7 @@
 create table itens(
 
-    cod bigint not null unique,
+    cod bigint not null auto_increment,
+    reference varchar(50) not null,
     img mediumblob,
 	name varchar(500) not null unique,
     replacement_value decimal(10,2) not null,
