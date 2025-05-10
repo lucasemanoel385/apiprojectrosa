@@ -15,6 +15,7 @@ public record UpdateClient(
 		String cep,
 		String city,
 		String district,
+		String complement,
 		String street,
 		String number,
 		String uf,
