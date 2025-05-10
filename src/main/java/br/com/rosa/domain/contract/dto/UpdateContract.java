@@ -11,10 +11,12 @@ public record UpdateContract(
 		Long contractId,
 		Long clientId,
 		String contactPhone,
-		@FutureOrPresent(message = "Deve ser uma data presente ou futura")
 		LocalDate dateOf,
 		@FutureOrPresent(message = "Deve ser uma data presente ou futura")
 		LocalDate dateUntil,
+		@FutureOrPresent(message = "Data prova deve ser uma data presente ou futura")
+		LocalDate dateTrialDress,
+		LocalDate dateEvent,
 		@NotNull(message = "Não é possivel ter 0 itens")
 		List<ContractItem> items,
 		double discount,
