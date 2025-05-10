@@ -89,13 +89,13 @@ class RepositoryContractTest {
                 client.getId(),
                 LocalDate.of(2024, 7, 13),
                 LocalDate.of(2024, 7, 14),
-                5, "eu", listItems, null, null);
+                LocalDate.of(2024, 7, 13), LocalDate.of(2024, 7, 14),5,"eu", listItems, null, null);
 
         var contract = new Contract(contractRegister, LocalDate.now(), listItemss);
         contract.setContractSituation(SituationContract.RESERVADO);
         entity.persist(contract);
 
-        return  contract;
+        return contract;
     }
 
     private Client registerClient() {
@@ -104,10 +104,10 @@ class RepositoryContractTest {
         var clientRegister = new ClientRegister(
                 "Lucas", dateBirth, "09068306642",
                 "456456546456", "33125420", "Santa Luzia", "São Benedito",
-                "Rua monte calvario", "322", "MG", null, null,null);
+                "", "Rua monte calvario","322", "MG", null, null,null);
 
         var address = new DataAddress("33125420", "Rua monte calvario",
-                "322", "São benedito", "Santa Luzia", "MG");
+                "322", "São benedito", "", "Santa Luzia","MG");
 
         var client = new Client(clientRegister, address);
         entity.persist(client);
