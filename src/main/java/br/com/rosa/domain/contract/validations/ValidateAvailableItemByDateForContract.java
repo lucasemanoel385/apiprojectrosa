@@ -12,7 +12,7 @@ import br.com.rosa.infra.exceptions.ValidationException;
 import java.util.Set;
 
 @Component
-public class ValidateAvailableItemByDate implements ValidateContractRent {
+public class ValidateAvailableItemByDateForContract implements ValidateContractRent {
 	
 	@Autowired
 	private RepositoryItem repositoryItem;
