@@ -10,32 +10,51 @@ import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
 public class TransformAndResizeImage {
-    
+
     public static byte[] saveImgItem(MultipartFile file) {
-
         try {
+            if (file == null) {
+                return null;
+            }
 
-            //Lê a imagem
+            // Lê a imagem original
             BufferedImage imageOrigin = ImageIO.read(file.getInputStream());
 
-            int imageWidth = 400;
-            int imageHeight = 550;
+            if (imageOrigin == null) {
+                throw new ValidationException("Formato de imagem inválido");
+            }
 
-            //Redimensiona a imagem com a largura e altura desejada
-            BufferedImage imgResized = resizeImage(imageOrigin, imageWidth, imageHeight);
+            // Obtém largura e altura originais
+            int originalWidth = imageOrigin.getWidth();
+            int originalHeight = imageOrigin.getHeight();
 
-            //Desenha a imagem com sua altura e largura definidas
-            Graphics2D g = imgResized.createGraphics();
-            g.drawImage(imageOrigin, 0, 0, imageWidth, imageHeight, null);
+            int targetWidth = 400;
+            int targetHeight = 520;
+
+            // Calcula a largura/altura proporcionalmente e pega o menor valor entre o height e o width
+            double ratio = Math.min((double) targetWidth / originalWidth, (double) targetHeight / originalHeight);
+            int newWidth = (int) (originalWidth * ratio);
+            int newHeight = (int) (originalHeight * ratio);
+
+            // Redimensiona mantendo a proporção
+            BufferedImage imgResized = resizeImage(imageOrigin, newWidth, newHeight);
+
+            // Cria uma nova imagem no tamanho desejado e centraliza a imagem redimensionada
+            BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = finalImage.createGraphics();
+            g.setColor(Color.WHITE); // Fundo branco
+            g.fillRect(0, 0, targetWidth, targetHeight);
+            g.drawImage(imgResized, (targetWidth - newWidth) / 2, (targetHeight - newHeight) / 2, null);
             g.dispose();
 
+            // Converte para byte array
             ByteArrayOutputStream img = new ByteArrayOutputStream();
-            ImageIO.write(imgResized, "png", img);
+            ImageIO.write(finalImage, "png", img);
 
             return img.toByteArray();
 
         } catch (Exception e) {
-            throw new ValidationException("Formatação de imagem errada");
+            throw new ValidationException("Erro ao processar a imagem: " + e.getMessage());
         }
     }
 
@@ -44,15 +63,14 @@ public class TransformAndResizeImage {
     }
 
     private static BufferedImage resizeImage(BufferedImage imageOriginal, int width, int height) {
-        Image resizedImage = imageOriginal.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        //Desenha a imagem redimensionada
+        // Scale_Smooth da um resultado amis suave ao reduzir o tamanho da imagem
+        Image resizedImage = imageOriginal.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = newImage.createGraphics();
+        // Interpolacao e melhor quando se redimensiona a imagem
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.drawImage(resizedImage, 0, 0, null);
         g.dispose();
-
         return newImage;
     }
-
 }
