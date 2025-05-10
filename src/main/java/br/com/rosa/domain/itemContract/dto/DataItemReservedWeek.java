@@ -6,11 +6,13 @@ import java.time.LocalDate;
 
 public record DataItemReservedWeek(
         Long cod,
+        String reference,
         String name,
         Long amount,
+        LocalDate startDate,
         LocalDate finalDate
 ) {
     public DataItemReservedWeek(ItemContract reserved) {
-        this(reserved.getCod(), reserved.getName(), reserved.getQuantity(), reserved.getFinalDate());
+        this(reserved.getCod(), reserved.getReference(),reserved.getName(), reserved.getQuantity(), reserved.getStartDate(), reserved.getFinalDate());
     }
 }
