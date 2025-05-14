@@ -1,4 +1,4 @@
-create table Contract(
+create table contract(
 
     id bigint not null auto_increment,
     client_id bigint not null,
