@@ -1,6 +1,6 @@
 # 📦 API Backend - Spring Boot
 
-API desenvolvida com **Java Spring Boot** para gerenciamento de categorias, produtos/itens, clientes, contratos e contabilidade. Oferece endpoints REST com autenticação via **JWT**, versionamento de banco com **Flyway**, e documentação com **SpringDoc**.
+API desenvolvida com **Java Spring Boot** para gerenciamento de categorias, produtos/itens, clientes, agendamentos, contratos e contabilidade. Oferece endpoints REST com autenticação via **JWT**, versionamento de banco com **Flyway**, e documentação com **SpringDoc**.
 
 ---
 
@@ -88,24 +88,3 @@ Atualize o `application.yml` com suas credenciais e URL do banco.
 > As migrations do Flyway são executadas automaticamente ao iniciar a aplicação.
 
 ---
-
-## 🗂️ Estrutura das entidades
-
-- `Categoria`
-- `Produto/Item`
-- `Cliente`
-- `Contrato`
-- `Item do Contrato`
-- `Contabilidade` (entradas, despesas, filtros por período)
-
----
-
-## 🧑‍💻 Autor
-
-Desenvolvido por [Seu Nome].
-
----
-
-## 📄 Licença
-
-Distribuído sob a licença [MIT](LICENSE).
