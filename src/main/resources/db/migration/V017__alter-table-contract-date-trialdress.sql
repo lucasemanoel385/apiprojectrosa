@@ -1,0 +1,1 @@
+ALTER TABLE contract ADD COLUMN date_trial_dress date null;
