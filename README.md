@@ -104,36 +104,12 @@ Atualize o `application.yml` com suas credenciais e URL do banco.
 2. **Crie a imagem Docker:**
 
 ```bash
-docker build -t minha-api-spring .
+docker-compose build
 ```
 
 3. **Execute o container:**
 
 ```bash
-docker run -p 8080:8080 minha-api-spring
+docker-compose up
 ```
-
-> Certifique-se de que o banco MySQL esteja acessível via rede para que a aplicação possa se conectar.
-
 ---
-
-## 🗂️ Estrutura das entidades
-
-- `Categoria`
-- `Produto/Item`
-- `Cliente`
-- `Contrato`
-- `Item do Contrato`
-- `Contabilidade` (entradas, despesas, filtros por período)
-
----
-
-## 🧑‍💻 Autor
-
-Desenvolvido por [Seu Nome].
-
----
-
-## 📄 Licença
-
-Distribuído sob a licença [MIT](LICENSE).
