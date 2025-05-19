@@ -113,3 +113,8 @@ docker-compose build
 docker-compose up
 ```
 ---
+
+🌐 Frontend
+O repositório do frontend está disponível em:
+🔗 https://github.com/lucasemanoel385/LojaLocacao
+---
