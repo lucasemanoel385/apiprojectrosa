@@ -73,7 +73,7 @@ http://localhost:8080/swagger-ui/index.html
 1. **Clone o repositório:**
 
 ```bash
-git clone [git@github.com:lucasemanoel385/LojaLocacao.git](https://github.com/lucasemanoel385/LojaLocacao.git)
+git clone https://github.com/lucasemanoel385/LojaLocacao.git
 ```
 
 2. **Configure o banco de dados MySQL:**
