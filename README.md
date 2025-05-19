@@ -116,6 +116,6 @@ docker-compose up
 ## 🌐 Frontend
 
 O repositório do frontend está disponível em:  
-🔗 [https://github.com/lucasemanoel385/CursosEBSFront](https://github.com/lucasemanoel385/CursosEBSFront)
+🔗 [https://github.com/lucasemanoel385/LojaLocacao](https://github.com/lucasemanoel385/LojaLocacao)
 
 ---
