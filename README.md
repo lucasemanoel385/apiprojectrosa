@@ -73,8 +73,7 @@ http://localhost:8080/swagger-ui/index.html
 1. **Clone o repositório:**
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone [git@github.com:lucasemanoel385/LojaLocacao.git](https://github.com/lucasemanoel385/LojaLocacao.git)
 ```
 
 2. **Configure o banco de dados MySQL:**
@@ -114,7 +113,9 @@ docker-compose up
 ```
 ---
 
-🌐 Frontend
-O repositório do frontend está disponível em:
-🔗 https://github.com/lucasemanoel385/LojaLocacao
+## 🌐 Frontend
+
+O repositório do frontend está disponível em:  
+🔗 [https://github.com/lucasemanoel385/CursosEBSFront](https://github.com/lucasemanoel385/CursosEBSFront)
+
 ---
