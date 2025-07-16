@@ -52,33 +52,24 @@ public class ItemController {
 	
 	@GetMapping
 	public ResponseEntity<Page<DataItem>> getItens(
-			@PageableDefault(page = 0 ,sort = "cod",size = 5, direction = Direction.DESC) Pageable page,
-			@RequestParam(required = false) String search) {
+			@PageableDefault(page = 0 ,sort = "cod",size = 5, direction = Direction.ASC) Pageable page,
+			@RequestParam(required = false) String search, @RequestParam(required = false) String filterCategorySearch) {
 
-		var listItens = service.listItems(page, search);
-		
+		var listItens = service.listItems(page, search, filterCategorySearch);
+
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-		
+
 		return ResponseEntity.ok().headers(headers).body(listItens);
 		
-	}
-
-	@GetMapping("all")
-	public ResponseEntity<Page<DataItem>> getAllItens(@PageableDefault(sort = "name", size = 100000, direction = Direction.DESC) Pageable page) {
-
-		var listItens = service.forListItems(repository.findAll() ,page);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		return ResponseEntity.ok().headers(headers).body(listItens);
-
 	}
 
 	@GetMapping("filter")
 	public ResponseEntity<Page<DataItem>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 50) Pageable page
-														, @RequestParam String filter) {
+														,@RequestParam String filter) {
 
-		var listItens = service.forListItems(repository.findAllByNameOrCodeOrReference(filter) ,page);
+		var listItens = repository.findAllByNameOrCodeOrReference(page, filter)
+				.map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 

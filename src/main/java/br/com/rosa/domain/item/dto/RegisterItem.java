@@ -6,7 +6,7 @@ public record RegisterItem(
 		Long cod,
 		String reference,
 		String name,
-		double replacementValue,
+		String replacementValue,
 		int amount,
 		String category
 		) {

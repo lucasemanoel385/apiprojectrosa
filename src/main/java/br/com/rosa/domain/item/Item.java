@@ -27,7 +27,7 @@ public class Item {
 	private String reference;
 	private byte[] img;
 	private String name;
-	private double replacementValue;
+	private String replacementValue;
 	private Long quantity;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "categoria_id")
@@ -60,7 +60,7 @@ public class Item {
 		this.category = new Category(item.getCategory().getId());
 	}
 
-	public Item(Long codigo, String descricao, double v, Long quantidade, Long idCategory) {
+	public Item(Long codigo, String descricao, String v, Long quantidade, Long idCategory) {
 		this.name = descricao;
 		this.replacementValue = v;
 		this.quantity = quantidade;

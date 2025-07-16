@@ -1,17 +1,12 @@
 package br.com.rosa.domain.item.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import br.com.rosa.infra.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,10 +35,6 @@ public class ItemService {
 
 		var category = repositoryCategory.getReferenceByName(dados.category());
 
-		/*if(file == null) {
-			throw new NullPointerException("Imagem não selecionada");
-		}*/
-
 		var imgBytes = TransformAndResizeImage.saveImgItem(file);
 		
 		//Salva o item no banco de dados
@@ -63,40 +54,24 @@ public class ItemService {
 		return i;
 	}
 
-	public Page<DataItem> listItems(Pageable page, String search) {
+	public Page<DataItem> listItems(Pageable page, String search, String filterSearch) {
 
 		if (search == null || search.isEmpty()) {
-
-			var itemsParam = repository.findAll(Sort.by("cod"));
-			return forListItems(itemsParam, page);
-
+			System.out.println("teste");
+			return repository.findAll(page).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+		} else if (filterSearch.equals("cod")) {
+			return repository.findAllByCode(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+		} else if (filterSearch.equals("reference")){
+			return repository.findAllByReference(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
 		} else {
-
-			var itemsParam = repository.findAllByNameOrCodeOrReference(search);
-			return forListItems(itemsParam, page);
+			return repository.findAllByName(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
 		}
-	}
 
-	public Page<DataItem> forListItems(List<Item> items, Pageable page) {
-
-		List<DataItem> listItems = new ArrayList<>();
-
-		items.forEach(item -> {
-
-			//Pega a imagem da pasta com a ulr salva no banco de dados
-			var base64Image = TransformAndResizeImage.takeImage(item.getImg());
-
-			//Criamos a instancia do DTO(Record) e adicionamos na lista
-			DataItem i = new DataItem(item, base64Image);
-			listItems.add(i);
-		});
-
-		//Retornar o menor numero entre os 2 parametros
-		int start = Math.min((int)page.getOffset(), listItems.size());
-		int end = Math.min((start + page.getPageSize()), listItems.size());
-		Page<DataItem> pagee = new PageImpl<DataItem>(listItems.subList(start, end), page, listItems.size());
-
-		return pagee;
+		/*if (search == null || search.isEmpty()) {
+			return repository.findAll(page).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+		} else {
+			return repository.findAllByNameOrCodeOrReference(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+		}*/
 	}
 
 	public Item updateItem(UpdateItem data, MultipartFile file) {
@@ -126,7 +101,7 @@ public class ItemService {
 		if(data.name() != null) {
 			item.setName(data.name());
 		}
-		if(data.replacementValue() > 0) {
+		if(data.replacementValue() != null) {
 			item.setReplacementValue(data.replacementValue());
 		}
 		if(data.amount() >= 0) {

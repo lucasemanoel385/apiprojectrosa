@@ -58,7 +58,7 @@ class ItemServiceTest {
     @DisplayName("Should success if item save in repository")
     void createItem01() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", "20.30", 1, "testCategory");
 
         var mockFile = returnImgFake();
 
@@ -82,7 +82,7 @@ class ItemServiceTest {
     @DisplayName("Should throw ValidationException if format img invalid")
     void createItem02() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", "20.30", 1, "testCategory");
 
         // Criação de um arquivo de imagem fake
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", new byte[]{1, 2, 3, 4});
@@ -103,7 +103,7 @@ class ItemServiceTest {
     @DisplayName("Should return SqlConstraintViolationException")
     void createItem03() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", "20.30", 1, "testCategory");
 
         doThrow(new SqlConstraintViolationException("Código do produto já existe")).when(
                 validateIfExistsTest).validateRegisterItem(dtoItem.cod(), dtoItem.category(), dtoItem.name());
@@ -117,46 +117,14 @@ class ItemServiceTest {
     }
 
     @Test
-    @DisplayName("Should return a list page")
-    void forListItems() throws IOException {
-
-        List<Item> items = new ArrayList<>();
-        var mockFile = returnImgFake();
-        items.add(new Item(new RegisterItem(1L, "10","test", 20.30, 1, "testCategory"),
-                1L, mockFile.getBytes()));
-
-        List<DataItem> listItems = new ArrayList<>();
-        items.forEach(item -> {
-
-            //Pega a imagem da pasta com a url salva no banco de dados
-            var base64Image = TransformAndResizeImage.takeImage(item.getImg());
-
-            //Criamos a instancia do DTO(Record) e adicionamos na lista
-            DataItem i = new DataItem(item, base64Image);
-            listItems.add(i);
-        });
-
-
-        Pageable page = PageRequest.of(0, 5);
-        int start = Math.min((int)page.getOffset(), listItems.size());
-        int end = Math.min((start + page.getPageSize()), listItems.size());
-        Page<DataItem> pagina = new PageImpl<DataItem>(listItems.subList(start, end), page, listItems.size());
-
-        var returnList = serviceItemTest.forListItems(items, page);
-
-        assertThat(returnList).isEqualTo(pagina);
-
-    }
-
-    @Test
     @DisplayName("Should return updated item")
     void updateItem01() throws IOException {
 
-        var updateItem = new UpdateItem(1L, "10", "test", 10, 20, 1L, "testCategory");
+        var updateItem = new UpdateItem(1L, "10", "test", 10, "20", 1L, "testCategory");
 
         var mockFile = returnImgFake();
 
-        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", "20.30", 1, "testCategory");
 
         var item = new Item(dtoItem, 1L, mockFile.getBytes());
         item.setCod(1L);
@@ -180,11 +148,11 @@ class ItemServiceTest {
     @DisplayName("Should return SqlConstraintViolationException")
     void updateItem02() throws IOException {
 
-        var updateItem = new UpdateItem(1L, "10", "test", 10, 20, 1L, "1L");
+        var updateItem = new UpdateItem(1L, "10", "test", 10, "20", 1L, "1L");
 
         var mockFile = returnImgFake();
 
-        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", "20.30", 1, "testCategory");
 
         var item = new Item(dtoItem, 1L, mockFile.getBytes());
 

@@ -2,6 +2,7 @@ package br.com.rosa.domain.contract.service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.contract.dto.*;
@@ -20,6 +21,7 @@ import br.com.rosa.domain.item.RepositoryItem;
 import br.com.rosa.domain.itemContract.ItemContract;
 import br.com.rosa.domain.itemContract.RepositoryItemContract;
 import br.com.rosa.infra.exceptions.ValidationException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ContractService {
@@ -73,6 +75,9 @@ public class ContractService {
 		Contract contract = repository.getReferenceById(data.contractId());
 		Set<ItemContract> itemsPrevious = contract.getItens();
 
+		Map<Long, ItemContract> itensPreviousMap = itemsPrevious.stream()
+				.collect(Collectors.toMap(ItemContract::getCod, item -> item));
+
 		Map<Long, ItemContract> itemsCurrent = new HashMap<>();
 
 		if (data.items() != null) {
@@ -83,6 +88,15 @@ public class ContractService {
 			);
 
 		}
+
+		// Se o contrato está reservado, manter os valores antigos nos novos itens
+		/*if (contract.getContractSituation() == SituationContract.RESERVADO) {
+			itemsCurrent.forEach((cod, newItem) -> {
+				if (itensPreviousMap.containsKey(cod)) {
+					newItem.setValueItemContract(itensPreviousMap.get(cod).getValueItemContract());
+				}
+			});
+		}*/
 
 		Set<ItemContract> itemsUpdate = new HashSet<>(itemsCurrent.values());
 
@@ -122,7 +136,10 @@ public class ContractService {
 	}
 
 	private void updateSituationContract(Contract contract) {
-
+		
+		/*if(contract.getContractSituation() == SituationContract.RESERVADO) {
+			throw new ValidationException("Contrato já reservado");
+		}*/
 		switch (contract.getContractSituation()) {
             case ORCAMENTO:
 				var itensByContract = contract.getItens();
@@ -144,13 +161,12 @@ public class ContractService {
 		
 		Map<Long, ItemContract> items = new HashMap<>();
 
-        for (ContractItem t : dataItems) {
+        for (ContractItem itemContract : dataItems) {
 			Item item = null;
 			ItemContract itemContrato = null;
-            item = repositoryItem.getReferenceByCod(t.getCod());
-            itemContrato = new ItemContract(item, t.getValueItem(), dateOf, dateUntil, contractSituation);
-			itemContrato.setId(t.getId());
-            itemContrato.setQuantity(t.getAmount());
+            item = repositoryItem.getReferenceByCod(itemContract.getCod());
+			itemContrato = new ItemContract(item, itemContract, dateOf, dateUntil, contractSituation);
+			itemContrato.setId(itemContract.getId());
 			if (items.containsKey(itemContrato.getCod())) {
 				throw new ValidationException("Itens iguais, favor remover o item duplicado.");
 			}

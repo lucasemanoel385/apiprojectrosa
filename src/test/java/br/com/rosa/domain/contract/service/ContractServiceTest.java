@@ -94,7 +94,7 @@ class ContractServiceTest {
         listItems.add(item2);
 
         var mockFile = returnImgFake();
-        var registerItem = new RegisterItem(1L, "10", "teste", 15, 1,"teste");
+        var registerItem = new RegisterItem(1L, "10", "teste", "15", 1,"teste");
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
         var contractRegister = dtoRegisterContract(listItems);
@@ -122,11 +122,11 @@ class ContractServiceTest {
 
         var mockFile = returnImgFake();
 
-        var registerItem = new RegisterItem(1L, "10","teste", 20, 2, "teste");
+        var registerItem = new RegisterItem(1L, "10","teste", "20", 2, "teste");
 
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
-        var registerItem1 = new RegisterItem(1L,"10","teste", 20, 1, "teste");
+        var registerItem1 = new RegisterItem(1L,"10","teste", "20", 1, "teste");
 
         var item1 = new Item(registerItem1, 1L, mockFile.getBytes());
 
@@ -163,7 +163,7 @@ class ContractServiceTest {
 
         var mockFile = returnImgFake();
 
-        var registerItem = new RegisterItem(1L, "10","teste", 20, 2, "teste");
+        var registerItem = new RegisterItem(1L, "10","teste", "20", 2, "teste");
 
         var item = new Item(registerItem, 1L, mockFile.getBytes());
         item.setCod(1L);

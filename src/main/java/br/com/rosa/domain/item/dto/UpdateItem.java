@@ -5,7 +5,7 @@ public record UpdateItem(
 		String reference,
 		String name,
 		double value,
-		double replacementValue,
+		String replacementValue,
 		Long amount,
 		String category		) {
 

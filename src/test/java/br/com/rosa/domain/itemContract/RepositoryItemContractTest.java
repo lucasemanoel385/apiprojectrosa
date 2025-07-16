@@ -66,7 +66,7 @@ class RepositoryItemContractTest {
             entity.persist(category);
         }
 
-        var registerItem = new RegisterItem(1L, "10","test", 20, 1, "test");
+        var registerItem = new RegisterItem(1L, "10","test", "20", 1, "test");
 
         var item = new Item(registerItem, category.getId(), mockFile.getBytes());
         entity.persist(item);

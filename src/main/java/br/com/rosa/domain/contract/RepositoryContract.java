@@ -60,14 +60,22 @@ public interface RepositoryContract extends JpaRepository<Contract, Long>{
 	@Query(value = "delete FROM contract where final_date <= :dateNow AND contract_situation = 'RESERVADO'", nativeQuery = true)
 	void deleteContractsReservationsWithinOneYearAgo(String dateNow);
 
-	@Query(value = "SELECT c.* " +
+	@Query(value = "SELECT DISTINCT c.* " +
 			"FROM contract c " +
-			"JOIN contract_itens i ON  c.id = i.contract_id " +
+			"JOIN contract_itens i ON c.id = i.contract_id " +
 			"JOIN itens_contract ic ON ic.id = i.itens_id " +
 			"WHERE ic.contract_situation = 'RESERVADO' " +
-			"AND (ic.cod = :search OR ic.reference LIKE CONCAT(:search, '%') OR ic.name LIKE CONCAT(:search, '%')) " +
-			"AND (c.start_date >= :dateNow "+
-			"OR c.final_date >= :dateNow)",
+			"AND (ic.cod = :search OR ic.reference = :search OR ic.name LIKE CONCAT(:search, '%')) " +
+			"AND (c.start_date >= :dateNow OR c.final_date >= :dateNow)",
+
+			countQuery = "SELECT COUNT(DISTINCT c.id) " +
+					"FROM contract c " +
+					"JOIN contract_itens i ON c.id = i.contract_id " +
+					"JOIN itens_contract ic ON ic.id = i.itens_id " +
+					"WHERE ic.contract_situation = 'RESERVADO' " +
+					"AND (ic.cod = :search OR ic.reference = :search OR ic.name LIKE CONCAT(:search, '%')) " +
+					"AND (c.start_date >= :dateNow OR c.final_date >= :dateNow)",
+
 			nativeQuery = true)
 	Page<Contract> getItemsContractId(Pageable pageable,String search, String dateNow);
 }

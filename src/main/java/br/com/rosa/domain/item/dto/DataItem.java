@@ -9,7 +9,7 @@ public record DataItem(
 		Long cod,
 		String reference,
 		String name,
-		double replacementValue,
+		String replacementValue,
 		Long amount,
 		Category category,
 		String imagem) {

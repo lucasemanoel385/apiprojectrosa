@@ -17,6 +17,7 @@ import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.domain.contract.service.ContractService;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ContractController {
 	@Autowired
 	private ContractService service;
 
+	private String dateNow = LocalDate.now().toString();
 	
 
 	@PostMapping

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.com.rosa.domain.itemContract.dto.ItemsWithContractIdDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -61,8 +63,8 @@ public interface RepositoryItemContract extends JpaRepository<ItemContract, Long
      	AND (i.final_date >= :now OR i.start_date >= :now)
         AND i.contract_situation = :situationContract
 	""", nativeQuery = true)
-	List<ItemsWithContractIdDTO> findFilteredItensWithContractIdNotDate(
-			String reference,
+	Page<ItemsWithContractIdDTO> findFilteredItensWithContractIdNotDate(
+			Pageable page, String reference,
 			LocalDate now,
 			String situationContract
 	);
@@ -89,8 +91,8 @@ public interface RepositoryItemContract extends JpaRepository<ItemContract, Long
         AND i.start_date <= :dateEnd
         AND i.contract_situation = :situationContract
 	""", nativeQuery = true)
-	List<ItemsWithContractIdDTO> findAllItemsReservedInDateWithContract(
-			String reference,
+	Page<ItemsWithContractIdDTO> findAllItemsReservedInDateWithContract(
+			Pageable page, String reference,
 			LocalDate dateFirst,
 			LocalDate dateEnd,
 			String situationContract

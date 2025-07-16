@@ -8,7 +8,7 @@ public record DataItemsContract(
 		Long amount,
 		double value,
 		double valueTotal,
-		double valueReplacement,
+		String valueReplacement,
 		String imagem
 	) {
 	public DataItemsContract(DataItemsContract data) {

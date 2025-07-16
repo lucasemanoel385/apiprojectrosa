@@ -1,7 +1,8 @@
 package br.com.rosa.domain.item;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -12,8 +13,17 @@ public interface RepositoryItem extends JpaRepository<Item, Long>{
 
     boolean existsByCod(Long cod);
 
-    @Query(value = "select * from itens where reference like :search% or cod like :search% or name like :search%", nativeQuery = true)
-    List<Item> findAllByNameOrCodeOrReference(String search);
+    @Query(value = "select * from itens where reference = :search or cod = :search or name like :search%", nativeQuery = true)
+    Page<Item> findAllByNameOrCodeOrReference(Pageable page, String search);
+
+    @Query(value = "select * from itens where reference = :search", nativeQuery = true)
+    Page<Item> findAllByReference(Pageable page, String search);
+
+    @Query(value = "select * from itens where cod = :search", nativeQuery = true)
+    Page<Item> findAllByCode(Pageable page, String search);
+
+    @Query(value = "select * from itens where name like :search%", nativeQuery = true)
+    Page<Item> findAllByName(Pageable page, String search);
 
     boolean existsByName(String name);
 
