@@ -36,6 +36,8 @@ public class SchedulingService {
 		
 		schedulingRepository.save(scheduling);
 
+		deleteItemsAfterOfDate();
+
 		return scheduling;
 	}
 
@@ -48,6 +50,11 @@ public class SchedulingService {
 	public void deleteScheduling(Long id) {
 		schedulingRepository.deleteById(id);
 		
+	}
+
+	private void deleteItemsAfterOfDate() {
+		schedulingRepository.deleteAllSchedulingAfterOfData(LocalDate.now());
+
 	}
 	
 	

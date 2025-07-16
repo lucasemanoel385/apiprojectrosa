@@ -1,11 +1,11 @@
 package br.com.rosa.domain.item.dto;
 
 public record UpdateItem(
-		Long id,
 		Long cod,
+		String reference,
 		String name,
 		double value,
-		double replacementValue,
+		String replacementValue,
 		Long amount,
 		String category		) {
 

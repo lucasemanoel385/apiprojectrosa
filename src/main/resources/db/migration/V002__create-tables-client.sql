@@ -9,6 +9,7 @@ create table client(
 	cep varchar(10) not null,
 	city varchar(55) not null,
 	district varchar(55) not null,
+	complement varchar(100) null,
 	street varchar(100) not null,
 	number varchar(10) not null,
 	uf varchar(2) not null,

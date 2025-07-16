@@ -23,6 +23,7 @@ import br.com.rosa.domain.item.service.ItemService;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -51,34 +52,24 @@ public class ItemController {
 	
 	@GetMapping
 	public ResponseEntity<Page<DataItem>> getItens(
-			@PageableDefault(page = 0 ,sort = "cod",size = 5, direction = Direction.DESC) Pageable page,
-			@RequestParam(required = false) String search) {
+			@PageableDefault(page = 0 ,sort = "cod",size = 5, direction = Direction.ASC) Pageable page,
+			@RequestParam(required = false) String search, @RequestParam(required = false) String filterCategorySearch) {
 
-		var listItens = service.listItems(page, search);
-		
+		var listItens = service.listItems(page, search, filterCategorySearch);
+
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		return ResponseEntity.ok().headers(headers).body(listItens);
-		
-	}
-
-	@GetMapping("all")
-	public ResponseEntity<Page<DataItem>> getAllItens(@PageableDefault(sort = "name", size = 100000, direction = Direction.DESC) Pageable page) {
-
-		var listItens = service.forListItems(repository.findAll() ,page);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		return ResponseEntity.ok().headers(headers).body(listItens);
-
+		
 	}
 
 	@GetMapping("filter")
 	public ResponseEntity<Page<DataItem>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 50) Pageable page
-														, @RequestParam String filter) {
+														,@RequestParam String filter) {
 
-		var listItens = service.forListItems(repository.findAllByNameOrCode(filter) ,page);
+		var listItens = repository.findAllByNameOrCodeOrReference(page, filter)
+				.map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -110,8 +101,9 @@ public class ItemController {
 	
 	@DeleteMapping("{id}")
 	@Transactional
-	public ResponseEntity<Page<DataItem>> deleteItem(@PathVariable Long id) {
-		repository.deleteById(id);
+	public ResponseEntity deleteItem(@PathVariable Long id) {
+
+		service.deleteItem(id);
 		return ResponseEntity.noContent().build();
 		
 	}
@@ -119,11 +111,15 @@ public class ItemController {
 	@GetMapping("reserved-items")
 	public ResponseEntity<List<DataItemReservedWeek>> getAllReservedBetweenDate() {
 
-		var dateMinusSeven = LocalDate.now().minusDays(7).toString();
+		var dateNow = LocalDate.now().toString();
 
 		var datePlusSeven = LocalDate.now().plusDays(7).toString();
 
-		var reserved = repositoryItemContract.findAllItemsBetweenDate(dateMinusSeven, datePlusSeven).stream().map(DataItemReservedWeek::new).toList();
+		var reserved = repositoryItemContract.findAllItemsBetweenDate(dateNow, datePlusSeven)
+				.stream()
+				.map(DataItemReservedWeek::new)
+				.sorted(Comparator.comparing(DataItemReservedWeek::startDate))
+				.toList();
 
 		return ResponseEntity.ok(reserved);
 

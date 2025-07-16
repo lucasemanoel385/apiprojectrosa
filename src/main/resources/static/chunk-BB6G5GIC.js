@@ -1,0 +1,1 @@
+import{Jc as a,pa as i}from"./chunk-U47TUA2Z.js";var f=(()=>{let r=class r{transform(e){let t=e;return t=a(e,"dd/MM/yyyy","pt-BR"),t}transformInputDate(e){let t=e;return t=a(e,"yyyy-MM-dd","pt-BR"),t}};r.\u0275fac=function(t){return new(t||r)},r.\u0275pipe=i({name:"formatDatePipe",type:r,pure:!0,standalone:!0});let o=r;return o})();export{f as a};

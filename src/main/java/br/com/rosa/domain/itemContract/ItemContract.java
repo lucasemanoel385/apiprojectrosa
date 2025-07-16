@@ -2,6 +2,7 @@ package br.com.rosa.domain.itemContract;
 
 import java.time.LocalDate;
 
+import br.com.rosa.domain.contract.dto.ContractItem;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.rosa.domain.contract.enunm.SituationContract;
@@ -26,16 +27,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "cod")
+@EqualsAndHashCode(of = {"id", "cod"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //você precisa ignorar os relacionamento lazy do hibernate porque eles vem inicialmente vazios e o jackson vai tentar fazer o parse dele pra json/xml
 public class ItemContract {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long cod;
+	private String reference;
 	private String name;
 	private double valueItemContract;
-	private double replacementValue;
+	private String replacementValue;
 	private Long quantity;
 	private double valueTotalItem;
 	private LocalDate startDate;
@@ -65,6 +67,7 @@ public class ItemContract {
 	
 	public ItemContract(Item item, double valueItem,LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
 		this.cod = item.getCod();
+		this.reference = item.getReference();
 		this.name = item.getName();
 		this.valueItemContract = valueItem;
 		this.replacementValue = item.getReplacementValue();
@@ -73,6 +76,19 @@ public class ItemContract {
 		this.startDate = dataInicio;
 		this.finalDate = dataFinal;
 		this.contractSituation = situacaoContrato;
+	}
+
+	public ItemContract(Item item, ContractItem itemContract, LocalDate startDate, LocalDate dateUntil, SituationContract situationContract) {
+		this.cod = item.getCod();
+		this.reference = item.getReference();
+		this.name = item.getName();
+		this.valueItemContract = itemContract.getValueItem();
+		this.replacementValue = item.getReplacementValue();
+		this.quantity = itemContract.getAmount();
+		this.valueTotalItem = itemContract.getValueItem() * itemContract.getAmount();
+		this.startDate = startDate;
+		this.finalDate = dateUntil;
+		this.contractSituation = situationContract;
 	}
 
 	public ItemContract(ItemContract item) {

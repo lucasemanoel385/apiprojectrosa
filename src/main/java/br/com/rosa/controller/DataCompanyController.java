@@ -38,12 +38,6 @@ public class DataCompanyController {
 
 	@Autowired
 	private RepositoryExpenses expensesRepository;
-
-	@Autowired
-	private RepositoryContract contractRepository;
-
-	@Autowired
-	private RepositoryPayment paymentRepository;
 	
 	@PutMapping
 	@Transactional

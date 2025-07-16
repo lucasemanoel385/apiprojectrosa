@@ -4,12 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.rosa.domain.categoryItem.Category;
 import br.com.rosa.domain.item.dto.RegisterItem;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,10 +22,12 @@ import lombok.Setter;
 public class Item {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cod;
+	private String reference;
 	private byte[] img;
 	private String name;
-	private double replacementValue;
+	private String replacementValue;
 	private Long quantity;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "categoria_id")
@@ -39,7 +36,7 @@ public class Item {
 	
 	public Item(RegisterItem data, Long idCategory, byte[] img) {
 		this.img = img;
-		this.cod = (long) data.cod();
+		this.reference = data.reference();
 		this.name = data.name();
 		this.replacementValue = data.replacementValue();
 		this.quantity = (long) data.amount();
@@ -63,8 +60,7 @@ public class Item {
 		this.category = new Category(item.getCategory().getId());
 	}
 
-	public Item(Long codigo, String descricao, double v, Long quantidade, Long idCategory) {
-		this.cod = codigo;
+	public Item(Long codigo, String descricao, String v, Long quantidade, Long idCategory) {
 		this.name = descricao;
 		this.replacementValue = v;
 		this.quantity = quantidade;
