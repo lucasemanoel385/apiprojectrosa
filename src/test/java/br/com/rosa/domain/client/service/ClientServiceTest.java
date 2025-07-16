@@ -63,7 +63,7 @@ class ClientServiceTest {
 
         var client = dtoClientRegister("09068306642");
 
-        var address = createAddress(client.cep(), client.street(), client.number(), client.district(), client.city(), client.uf());
+        var address = createAddress(client.cep(), client.street(), client.number(), client.district(), client.complement(),client.city(), client.uf());
 
         var clientRegister = new Client(client, address);
 
@@ -116,14 +116,14 @@ class ClientServiceTest {
     void updateClient01() {
         var dateBirth = LocalDate.of(2000,12,17);
         var client = dtoClientRegister("09068306642");
-        var address = createAddress(client.cep(), client.street(), client.number(), client.district(), client.city(), client.uf());
+        var address = createAddress(client.cep(), client.street(), client.number(), client.district(), client.district(),client.city(), client.uf());
 
         var clientReturn = new Client(1L, client, address);
 
         var clientUpdate = new UpdateClient(1L,
                 "Lucas", "09068306645", "456546547",dateBirth, "33125500",
-                "Santa Luzia", "Sao Benedito","Rua monte calvario",
-                "322","MG",null, null, null);
+                "Santa Luzia", "Sao Benedito","",
+                "Rua monte calvario","322","MG",null, null, null);
 
         when(repositoryClienteTest.getReferenceById(1L)).thenReturn(clientReturn);
 
@@ -142,8 +142,8 @@ class ClientServiceTest {
         var dateBirth = LocalDate.of(2000,12,17);
         var clientUpdate = new UpdateClient(1L,
                 "Lucas", "09068306642", "456546546",dateBirth, "33125500",
-                "Santa Luzia", "Sao Benedito","Rua monte calvario",
-                "322","MG",null, null, null);
+                "Santa Luzia", "Sao Benedito","",
+                "Rua monte calvario","322","MG",null, null, null);
 
         doThrow(new ValidationException("CPF inválido"))
                 .when(validationCpfCnpj).validateCnpjCpf(clientUpdate.cpfCnpj());
@@ -173,11 +173,11 @@ class ClientServiceTest {
 
         return new ClientRegister(
                 "Lucas", dateBirth, cep,"456546546", "33125420",
-                "Santa Luzia", "Sao Benedito","Rua monte calvario",
-                "322","MG",null, null, null);
+                "Santa Luzia", "Sao Benedito","",
+                "Rua monte calvario","322","MG",null, null, null);
     }
 
-    private DataAddress createAddress(String cep, String street, String number, String district, String city, String uf) {
-        return new DataAddress(cep, street, number, district, city, uf);
+    private DataAddress createAddress(String cep, String street, String number, String district, String complement,String city, String uf) {
+        return new DataAddress(cep, street, number, district, complement,city, uf);
     }
 }

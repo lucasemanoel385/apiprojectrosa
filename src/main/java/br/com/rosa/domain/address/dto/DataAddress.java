@@ -5,6 +5,7 @@ public record DataAddress(
 		String street,
 		String number,
 		String district,
+		String complement,
 		String city,
 		String uf
 		) {
