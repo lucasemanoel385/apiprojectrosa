@@ -2,15 +2,10 @@ package br.com.rosa.domain.client;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import br.com.rosa.domain.address.Address;
 import br.com.rosa.domain.address.dto.DataAddress;
 import br.com.rosa.domain.client.dto.ClientRegister;
-import br.com.rosa.domain.client.validations.ValidateRgAndCpf;
-import br.com.rosa.infra.exceptions.SqlConstraintViolationException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,10 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
 
 @DataJpaTest //indica para o spring que essa é uma classe de teste que vai testar um repository JPA
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -78,10 +69,10 @@ class RepositoryClienteTest {
         var clientRegister = new ClientRegister(
                 "Lucas", dateBirth, "09068306642",
                 "456456546456", "33125420", "Santa Luzia", "São Benedito",
-                "Rua monte calvario", "322", "MG", null, null,null);
+                "", "Rua monte calvario","322", "MG", null, null,null);
 
         var address = new DataAddress("33125420", "Rua monte calvario",
-                "322", "São benedito", "Santa Luzia", "MG");
+                "322", "São benedito", "", "Santa Luzia","MG");
 
         var client = new Client(clientRegister, address);
 

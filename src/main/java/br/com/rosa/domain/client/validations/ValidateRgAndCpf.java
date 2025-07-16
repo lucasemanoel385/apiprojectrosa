@@ -18,10 +18,12 @@ public class ValidateRgAndCpf {
 
     public void ValidateUpdateClientCpfAndRg(UpdateClient data, Client client) {
 
-        if (!data.rgStateRegistration().equals(client.getRgStateRegistration())
-                &&
-                repository.existsByRgStateRegistration(data.rgStateRegistration())) {
-            throw new SqlConstraintViolationException("RG do cliente já existe");
+        if (!(data.rgStateRegistration() == null || data.rgStateRegistration() == "")) {
+            if (!data.rgStateRegistration().equals(client.getRgStateRegistration())
+                    &&
+                    repository.existsByRgStateRegistration(data.rgStateRegistration())) {
+                throw new SqlConstraintViolationException("RG do cliente já existe");
+            }
         }
 
         if (!data.cpfCnpj().equals(client.getCpfCnpj()) && repository.existsByCpfCnpj(data.cpfCnpj())) {
@@ -36,8 +38,12 @@ public class ValidateRgAndCpf {
         if (repository.existsByCpfCnpj(cpf)) {
             throw new SqlConstraintViolationException("CPF do cliente já existe");
         }
-        if (repository.existsByRgStateRegistration(rg)) {
-            throw new SqlConstraintViolationException("RG do cliente já existe");
+
+        if(!(rg == null || rg == "")) {
+            if (repository.existsByRgStateRegistration(rg)) {
+                throw new SqlConstraintViolationException("RG do cliente já existe");
+            }
+
         }
 
         validationCpfCnpj.validateCnpjCpf(cpf);

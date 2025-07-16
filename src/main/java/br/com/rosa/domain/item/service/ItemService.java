@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
+import br.com.rosa.infra.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -71,7 +72,7 @@ public class ItemService {
 
 		} else {
 
-			var itemsParam = repository.findAllByNameOrCode(search);
+			var itemsParam = repository.findAllByNameOrCodeOrReference(search);
 			return forListItems(itemsParam, page);
 		}
 	}
@@ -100,7 +101,7 @@ public class ItemService {
 
 	public Item updateItem(UpdateItem data, MultipartFile file) {
 
-		var item = repository.getReferenceById(data.id());
+		var item = repository.getReferenceById(data.cod());
 
 		validate.validateUpdateItem(data, item);
 
@@ -118,6 +119,10 @@ public class ItemService {
 
 	private void checkAndUpdateNullOrBlank(Item item, UpdateItem data) {
 
+		if(data.reference() != null) {
+			item.setReference(data.reference());
+		}
+
 		if(data.name() != null) {
 			item.setName(data.name());
 		}
@@ -127,10 +132,21 @@ public class ItemService {
 		if(data.amount() >= 0) {
 			item.setQuantity(data.amount());
 		}
-		if(data.category() != item.getCategory().getName() && repositoryCategory.existsByName(data.category())) {
-
+		if(data.category() != item.getCategory().getName()) {
 			var category = repositoryCategory.getReferenceByName(data.category());
 			item.setCategory(category.getId());
 		}
 	}
+
+    public void deleteItem(Long id) {
+
+		var itensWithContract = repository.findAllContractsWithItem(id);
+
+		if (itensWithContract > 0) {
+			throw new ValidationException("Parece que tem um item locado no contrato. Favor remover o item do contrato antes de excluir.");
+		}
+
+		repository.deleteById(id);
+
+    }
 }

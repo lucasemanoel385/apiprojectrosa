@@ -5,7 +5,8 @@ import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.domain.contract.dto.ContractItem;
 import br.com.rosa.domain.contract.dto.ContractRegister;
 import br.com.rosa.domain.contract.dto.UpdateContract;
-import br.com.rosa.domain.contract.validations.ValidateAvailableItemByDate;
+import br.com.rosa.domain.contract.validations.StartDateCannotGreaterThanFinalDate;
+import br.com.rosa.domain.contract.validations.ValidateAvailableItemByDateForContract;
 import br.com.rosa.domain.contract.validations.ValidateContractRent;
 import br.com.rosa.domain.item.Item;
 import br.com.rosa.domain.item.RepositoryItem;
@@ -58,7 +59,10 @@ class ContractServiceTest {
     private List<ValidateContractRent> validate;
 
     @InjectMocks
-    private ValidateAvailableItemByDate validateItemByDateTest;
+    private ValidateAvailableItemByDateForContract validateItemByDateTest;
+
+    @Mock
+    private StartDateCannotGreaterThanFinalDate checkDate;
 
 
     @Test
@@ -84,13 +88,13 @@ class ContractServiceTest {
     void registerContract02() throws IOException {
 
         List<ContractItem> listItems = new ArrayList<>();
-        var item1 = new ContractItem(1L, 10,1L, 10);
-        var item2 = new ContractItem(1L, 5,2L, 10);
+        var item1 = new ContractItem(1L,1L, 10,1L, 10);
+        var item2 = new ContractItem(2L,1L, 5,2L, 10);
         listItems.add(item1);
         listItems.add(item2);
 
         var mockFile = returnImgFake();
-        var registerItem = new RegisterItem(1L, "teste", 10, 1, "teste");
+        var registerItem = new RegisterItem(1L, "10", "teste", 15, 1,"teste");
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
         var contractRegister = dtoRegisterContract(listItems);
@@ -118,11 +122,11 @@ class ContractServiceTest {
 
         var mockFile = returnImgFake();
 
-        var registerItem = new RegisterItem(1L, "teste", 20, 2, "teste");
+        var registerItem = new RegisterItem(1L, "10","teste", 20, 2, "teste");
 
         var item = new Item(registerItem, 1L, mockFile.getBytes());
 
-        var registerItem1 = new RegisterItem(1L, "teste", 20, 1, "teste");
+        var registerItem1 = new RegisterItem(1L,"10","teste", 20, 1, "teste");
 
         var item1 = new Item(registerItem1, 1L, mockFile.getBytes());
 
@@ -159,10 +163,10 @@ class ContractServiceTest {
 
         var mockFile = returnImgFake();
 
-        var registerItem = new RegisterItem(1L, "teste", 20, 2, "teste");
+        var registerItem = new RegisterItem(1L, "10","teste", 20, 2, "teste");
 
         var item = new Item(registerItem, 1L, mockFile.getBytes());
-
+        item.setCod(1L);
         var itemContract = new ItemContract(item, 10,contract.getStartDate(), contract.getFinalDate(), contract.getContractSituation());
 
         listItemss.add(itemContract);
@@ -195,7 +199,7 @@ class ContractServiceTest {
         var contract = registerContract(contractRegister);
 
         var updateContract = new UpdateContract(1L, 1L, "986537693", LocalDate.of(2024, 7, 13),
-                LocalDate.of(2024, 07, 14), listItems, 0, "eu", null, null);
+                LocalDate.of(2024, 7, 14), LocalDate.of(2024, 7, 14),LocalDate.of(2024, 7, 14),listItems, 0, "eu", null, null);
 
         when(repositoryContractTest.getReferenceById(1L)).thenReturn(contract);
 
@@ -217,7 +221,7 @@ class ContractServiceTest {
                 1L,
                 LocalDate.of(2024, 7, 13),
                 LocalDate.of(2024, 7, 14),
-                5, "eu", listItems, null, null);
+                LocalDate.of(2024, 7, 14),LocalDate.of(2024, 7, 14),5, "eu", listItems, null, null);
 
     }
 

@@ -5,7 +5,10 @@ import java.util.*;
 
 import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.contract.dto.*;
+import br.com.rosa.domain.contract.validations.StartDateCannotGreaterThanFinalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.rosa.domain.contract.Contract;
@@ -33,13 +36,19 @@ public class ContractService {
 	@Autowired
 	private List<ValidateContractRent> validate;
 
+	@Autowired
+	private StartDateCannotGreaterThanFinalDate checkDate;
+
 	public DataContract registerContract(ContractRegister data) {
+
+		checkDate.startDateCannotGreaterThanFinalDate(data.dateOf(), data.dateUntil());
 
 		var items = setItemsContract(data.items(), data.dateOf(), data.dateUntil(), SituationContract.ORCAMENTO);
 		Set<ItemContract> itemsContracts = new HashSet<>(items.values());
 		validate.forEach(v -> v.validate(itemsContracts));
 
 		Contract contract = new Contract(data, LocalDate.now(), itemsContracts);
+
 		repository.save(contract);
 
 		var itemsContract = getImgOfItens(contract);
@@ -56,28 +65,23 @@ public class ContractService {
 
 		return new DataContract(contract, itemsContract);
 	}
-	
+
 	public DataContract changeContract(UpdateContract data) {
 
+		checkDate.startDateCannotGreaterThanFinalDate(data.dateOf(), data.dateUntil());
+
 		Contract contract = repository.getReferenceById(data.contractId());
-		var itensPrevious = contract.getItens();
+		Set<ItemContract> itemsPrevious = contract.getItens();
 
 		Map<Long, ItemContract> itemsCurrent = new HashMap<>();
 
-		if(data.items() != null) {
-			for (ItemContract test : itensPrevious) {
-				repositoryItemContrato.deleteById(test.getId());
-			}
-			var itens = setItemsContract(data.items(), data.dateOf(), data.dateUntil(), contract.getContractSituation());
-			itemsCurrent.putAll(itens);
-		}
+		if (data.items() != null) {
+			itemsPrevious.forEach(item -> item.setContractSituation(SituationContract.ORCAMENTO));
 
-		if (contract.getContractSituation() == SituationContract.RESERVADO) {
-			for (ItemContract x : itensPrevious) {
-				if (itemsCurrent.containsKey(x.getCod())) {
-					itemsCurrent.get(x.getCod()).setValueItemContract(x.getValueItemContract());
-				}
-			}
+			itemsCurrent = setItemsContract(
+					data.items(), data.dateOf(), data.dateUntil(), contract.getContractSituation()
+			);
+
 		}
 
 		Set<ItemContract> itemsUpdate = new HashSet<>(itemsCurrent.values());
@@ -85,13 +89,12 @@ public class ContractService {
 		validate.forEach(v -> v.validate(itemsUpdate));
 		contract.setItens(itemsUpdate);
 		contract.updateAtrb(data, itemsUpdate);
+		contract.setDateTrialDress(data.dateTrialDress());
+		contract.setDateEvent(data.dateEvent());
 		repository.save(contract);
 
 		var itemsContract = getImgOfItens(contract);
-
 		return new DataContract(contract, itemsContract);
-
-
 	}
 	
 	public void changeSituationContract(UpdateSituationContract data) {
@@ -109,7 +112,7 @@ public class ContractService {
 
 		contract.getItens().forEach((i) -> {
 			var img = repositoryItem.existsById(i.getCod()) ? repositoryItem.getReferenceById(i.getCod()).getImg() : null;
-			itemsContract.add(new DataItemsContract(i.getId(), i.getCod(), i.getName(),
+			itemsContract.add(new DataItemsContract(i.getId(), i.getCod(), i.getReference(),i.getName(),
 					i.getQuantity(), i.getValueItemContract(),
 					i.getValueTotalItem(), i.getReplacementValue(), TransformAndResizeImage.takeImage(img)));
 		});
@@ -119,21 +122,19 @@ public class ContractService {
 	}
 
 	private void updateSituationContract(Contract contract) {
-		
-		if(contract.getContractSituation() == SituationContract.RESERVADO) {
-			throw new ValidationException("Contrato já reservado");
-		}
+
 		switch (contract.getContractSituation()) {
-			case ORCAMENTO:
+            case ORCAMENTO:
 				var itensByContract = contract.getItens();
 				validate.forEach(v -> v.validate(itensByContract));
 				contract.setContractSituation(SituationContract.RESERVADO);
 				contract.setDateContract(LocalDate.now());
 				contract.getItens().forEach(item -> item.setContractSituation(SituationContract.RESERVADO));
 			break;
-			
-		case CONCLUIDO: 
-			repository.deleteById(contract.getId());
+			case RESERVADO:
+				throw new ValidationException("Contrato já reservado");
+            case CONCLUIDO:
+				repository.deleteById(contract.getId());
 			break;
 		}
 	}
@@ -144,11 +145,11 @@ public class ContractService {
 		Map<Long, ItemContract> items = new HashMap<>();
 
         for (ContractItem t : dataItems) {
-			System.out.println(t.getId());
 			Item item = null;
 			ItemContract itemContrato = null;
-            item = repositoryItem.getReferenceByCod(t.getId());
+            item = repositoryItem.getReferenceByCod(t.getCod());
             itemContrato = new ItemContract(item, t.getValueItem(), dateOf, dateUntil, contractSituation);
+			itemContrato.setId(t.getId());
             itemContrato.setQuantity(t.getAmount());
 			if (items.containsKey(itemContrato.getCod())) {
 				throw new ValidationException("Itens iguais, favor remover o item duplicado.");
@@ -170,13 +171,8 @@ public class ContractService {
 
 	}
 
-    public List<ListContract> getItemsReservedInContract(Long cod) {
-
+    public Page<ListContract> getItemsReservedInContract(Pageable pageable, String search) {
 		var dateNow = LocalDate.now().toString();
-		var t = repository.getItemsContractId(cod, dateNow);
-		List<Contract> listContract = new ArrayList<>();
-		t.forEach(i -> listContract.add(repository.getReferenceById(i)));
-		return listContract.stream().map(ListContract::new).toList();
-
+		return repository.getItemsContractId(pageable,search, dateNow).map(ListContract::new);
     }
 }

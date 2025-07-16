@@ -14,7 +14,7 @@ public interface RepositoryContract extends JpaRepository<Contract, Long>{
 	@Query(value = "select * from contract where start_date = :dataInicio and final_date = :dataFinal", nativeQuery = true)
 	List<Contract> findAllData(LocalDate dataInicio, LocalDate dataFinal);
 
-	@Query(value = "select c.id, c.client_id, c.date_contract, c.start_date, c.final_date, c.discount, c.value, \n" +
+	@Query(value = "select c.id, c.client_id, c.date_contract, c.start_date, c.final_date, c.date_trial_dress, c.date_event,c.discount, c.value, \n" +
 			"c.value_total, c.contract_situation, c.seller, c.observation, c.annotations\n" +
 			"from contract c LEFT JOIN client cl ON c.client_id = cl.id where cl.name_reason like :search% or cl.cpf_cnpj like :search% or c.id like :search%", nativeQuery = true)
     Page<Contract> findAllByIdOrByClientNameOrByClientCpf(String search, Pageable page);
@@ -60,13 +60,14 @@ public interface RepositoryContract extends JpaRepository<Contract, Long>{
 	@Query(value = "delete FROM contract where final_date <= :dateNow AND contract_situation = 'RESERVADO'", nativeQuery = true)
 	void deleteContractsReservationsWithinOneYearAgo(String dateNow);
 
-	@Query(value = "SELECT \n" +
-			"    i.contract_id\n" +
-			"FROM \n" +
-			"    contract_itens i\n" +
-			"JOIN \n" +
-			"    itens_contract ic ON ic.id = i.itens_id\n" +
-			"WHERE \n" +
-			"    ic.contract_situation = 'RESERVADO' and ic.cod = :cod and ic.start_date >= :dateNow", nativeQuery = true)
-	List<Long> getItemsContractId(Long cod, String dateNow);
+	@Query(value = "SELECT c.* " +
+			"FROM contract c " +
+			"JOIN contract_itens i ON  c.id = i.contract_id " +
+			"JOIN itens_contract ic ON ic.id = i.itens_id " +
+			"WHERE ic.contract_situation = 'RESERVADO' " +
+			"AND (ic.cod = :search OR ic.reference LIKE CONCAT(:search, '%') OR ic.name LIKE CONCAT(:search, '%')) " +
+			"AND (c.start_date >= :dateNow "+
+			"OR c.final_date >= :dateNow)",
+			nativeQuery = true)
+	Page<Contract> getItemsContractId(Pageable pageable,String search, String dateNow);
 }

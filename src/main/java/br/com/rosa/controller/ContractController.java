@@ -15,10 +15,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.rosa.domain.contract.RepositoryContract;
 import br.com.rosa.domain.contract.service.ContractService;
-import br.com.rosa.domain.itemContract.RepositoryItemContract;
 import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -30,18 +30,16 @@ public class ContractController {
 
 	@Autowired
 	private RepositoryPayment repositoryPayment;
-
-	@Autowired
-	private RepositoryItemContract repositoryItemContrato;
 	
 	@Autowired
 	private ContractService service;
+
 	
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<DataContract> registerContract(@RequestBody @Valid ContractRegister dados, UriComponentsBuilder uriBuilder) throws Exception {
-		var contrato = service.registerContract(dados);
+	public ResponseEntity<DataContract> registerContract(@RequestBody @Valid ContractRegister data, UriComponentsBuilder uriBuilder) {
+		var contrato = service.registerContract(data);
 
 		var uri = uriBuilder.path("/contract/{id}").buildAndExpand(contrato.id()).toUri();
 		return ResponseEntity.created(uri).body(contrato);
@@ -49,12 +47,12 @@ public class ContractController {
 
 	@GetMapping
 	public ResponseEntity<Page<ListContract>> getAllContract(
-			@PageableDefault(page = 0, size = 5, sort = "start_date" ,direction = Sort.Direction.ASC) Pageable page,
+			@PageableDefault(page = 0, size = 7, sort = "date_contract" ,direction = Sort.Direction.DESC) Pageable page,
 			@RequestParam(required = false) String search) {
 
 		return (search == null) ?
 					ResponseEntity.ok(repositoryContract.findAll(page).map(ListContract::new))
-						:
+				:
 							ResponseEntity.ok(repositoryContract.findAllByIdOrByClientNameOrByClientCpf(search, page).map(ListContract::new));
 
 	}
@@ -71,8 +69,7 @@ public class ContractController {
 	@GetMapping("contractMonth/{month}")
 	public ResponseEntity<List<ListContract>> getListContractMonthReserve(@PathVariable String month) {
 
-		var listContractMonth = repositoryContract.findAllByStartDate(month).stream().map(ListContract::new).toList();
-
+		var listContractMonth = repositoryContract.findAllByStartDate(month).stream().map(ListContract::new).sorted(Comparator.comparing(ListContract::dateReserve)).toList();
 		return ResponseEntity.ok(listContractMonth);
 
 	}
@@ -95,7 +92,6 @@ public class ContractController {
 	@PatchMapping
 	@Transactional
 	public ResponseEntity<DataContract> updateContract(@RequestBody @Valid UpdateContract data) {
-
 		var contract = service.changeContract(data);
 
 		return ResponseEntity.ok(contract);
@@ -111,10 +107,10 @@ public class ContractController {
 
 	}
 
-	@GetMapping("cod/{cod}")
-	public ResponseEntity<List<ListContract>> getItemsReservedInContract(@PathVariable Long cod) {
-
-			return ResponseEntity.ok(service.getItemsReservedInContract(cod));
+	@GetMapping("cod")
+	public ResponseEntity<Page<ListContract>> getItemsReservedInContract(@PageableDefault(page = 0, size = 7, sort = "start_date" ,direction = Sort.Direction.ASC)
+																			 Pageable pageable, @RequestParam String search) {
+			return ResponseEntity.ok(service.getItemsReservedInContract(pageable,search));
 	}
 
 	@PatchMapping("payment/{id}")

@@ -26,13 +26,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "cod")
+@EqualsAndHashCode(of = {"id", "cod"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //você precisa ignorar os relacionamento lazy do hibernate porque eles vem inicialmente vazios e o jackson vai tentar fazer o parse dele pra json/xml
 public class ItemContract {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long cod;
+	private String reference;
 	private String name;
 	private double valueItemContract;
 	private double replacementValue;
@@ -65,6 +66,7 @@ public class ItemContract {
 	
 	public ItemContract(Item item, double valueItem,LocalDate dataInicio, LocalDate dataFinal, SituationContract situacaoContrato) {
 		this.cod = item.getCod();
+		this.reference = item.getReference();
 		this.name = item.getName();
 		this.valueItemContract = valueItem;
 		this.replacementValue = item.getReplacementValue();

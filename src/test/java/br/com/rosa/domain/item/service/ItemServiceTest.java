@@ -58,7 +58,7 @@ class ItemServiceTest {
     @DisplayName("Should success if item save in repository")
     void createItem01() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
 
         var mockFile = returnImgFake();
 
@@ -82,7 +82,7 @@ class ItemServiceTest {
     @DisplayName("Should throw ValidationException if format img invalid")
     void createItem02() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
 
         // Criação de um arquivo de imagem fake
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", new byte[]{1, 2, 3, 4});
@@ -95,7 +95,7 @@ class ItemServiceTest {
             serviceItemTest.createItem(mockFile, dtoItem);
         });
 
-        Assertions.assertEquals("Formatação de imagem errada", exception.getMessage());
+        Assertions.assertEquals("Erro ao processar a imagem: Formato de imagem inválido", exception.getMessage());
 
     }
 
@@ -103,7 +103,7 @@ class ItemServiceTest {
     @DisplayName("Should return SqlConstraintViolationException")
     void createItem03() throws IOException {
 
-        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
 
         doThrow(new SqlConstraintViolationException("Código do produto já existe")).when(
                 validateIfExistsTest).validateRegisterItem(dtoItem.cod(), dtoItem.category(), dtoItem.name());
@@ -122,7 +122,7 @@ class ItemServiceTest {
 
         List<Item> items = new ArrayList<>();
         var mockFile = returnImgFake();
-        items.add(new Item(new RegisterItem(1L, "test", 20.30, 1, "testCategory"),
+        items.add(new Item(new RegisterItem(1L, "10","test", 20.30, 1, "testCategory"),
                 1L, mockFile.getBytes()));
 
         List<DataItem> listItems = new ArrayList<>();
@@ -152,15 +152,20 @@ class ItemServiceTest {
     @DisplayName("Should return updated item")
     void updateItem01() throws IOException {
 
-        var updateItem = new UpdateItem(1L, 1L, "test", 10, 20, 1L, "1L");
+        var updateItem = new UpdateItem(1L, "10", "test", 10, 20, 1L, "testCategory");
 
         var mockFile = returnImgFake();
 
-        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
 
         var item = new Item(dtoItem, 1L, mockFile.getBytes());
+        item.setCod(1L);
 
-        when(repositoryItemTest.getReferenceById(updateItem.id())).thenReturn(item);
+        var category = new Category(1L, "testCategory");
+
+        when(repositoryCategoryTest.getReferenceByName("testCategory")).thenReturn(category);
+
+        when(repositoryItemTest.getReferenceById(updateItem.cod())).thenReturn(item);
 
         var itemService = serviceItemTest.updateItem(updateItem, mockFile);
 
@@ -175,15 +180,15 @@ class ItemServiceTest {
     @DisplayName("Should return SqlConstraintViolationException")
     void updateItem02() throws IOException {
 
-        var updateItem = new UpdateItem(1L, 1L, "test", 10, 20, 1L, "1L");
+        var updateItem = new UpdateItem(1L, "10", "test", 10, 20, 1L, "1L");
 
         var mockFile = returnImgFake();
 
-        var dtoItem = new RegisterItem(1L, "test", 20.30, 1, "testCategory");
+        var dtoItem = new RegisterItem(1L, "10","test", 20.30, 1, "testCategory");
 
         var item = new Item(dtoItem, 1L, mockFile.getBytes());
 
-        when(repositoryItemTest.getReferenceById(updateItem.id())).thenReturn(item);
+        when(repositoryItemTest.getReferenceById(updateItem.cod())).thenReturn(item);
 
         doThrow(new SqlConstraintViolationException("Código do produto já existe")).when(validateIfExistsTest).validateUpdateItem(updateItem, item);
 
