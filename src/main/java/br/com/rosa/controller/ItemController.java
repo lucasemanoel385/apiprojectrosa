@@ -69,7 +69,7 @@ public class ItemController {
 														,@RequestParam String filter) {
 
 		var listItens = repository.findAllByNameOrCodeOrReference(page, filter)
-				.map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+				.map(i -> new DataItem(i));
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -95,7 +95,7 @@ public class ItemController {
 
 		var item = service.updateItem(dados, file);
 		
-		return ResponseEntity.ok().body(new DataItem(item, TransformAndResizeImage.takeImage(item.getImg())));
+		return ResponseEntity.ok().body(new DataItem(item));
 		
 	}
 	

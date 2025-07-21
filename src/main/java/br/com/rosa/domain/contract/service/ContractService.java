@@ -125,10 +125,10 @@ public class ContractService {
 		List<DataItemsContract> itemsContract = new ArrayList<>();
 
 		contract.getItens().forEach((i) -> {
-			var img = repositoryItem.existsById(i.getCod()) ? repositoryItem.getReferenceById(i.getCod()).getImg() : null;
-			itemsContract.add(new DataItemsContract(i.getId(), i.getCod(), i.getReference(),i.getName(),
+			var img = repositoryItem.existsById(i.getCod()) ? repositoryItem.getReferenceById(i.getCod()) : null;
+			itemsContract.add(new DataItemsContract(i.getId(), i.getCod(), i.getReference(),i.getName(), img.getUrl(),
 					i.getQuantity(), i.getValueItemContract(),
-					i.getValueTotalItem(), i.getReplacementValue(), TransformAndResizeImage.takeImage(img)));
+					i.getValueTotalItem(), i.getReplacementValue()));
 		});
 
 		return itemsContract;

@@ -48,7 +48,7 @@ public class ItemContractController {
                             var check = checkItemIfAvaible.validate(item, data);
                             Item itemRepo = repositoryItem.getReferenceByCod(item.getCod());
 
-                            return new ItemsAvailableDTO(item, check, TransformAndResizeImage.takeImage(itemRepo.getImg()));
+                            return new ItemsAvailableDTO(item, check);
                         })
                 :
                 repositoryItemContract.findAllItemsReservedInDateWithContract(page,
@@ -56,7 +56,7 @@ public class ItemContractController {
                     var check = checkItemIfAvaible.validate(item, data);
                     Item itemRepo = repositoryItem.getReferenceByCod(item.getCod());
 
-                    return new ItemsAvailableDTO(item, check, TransformAndResizeImage.takeImage(itemRepo.getImg()));
+                    return new ItemsAvailableDTO(item, check);
                 });
 
         HttpHeaders headers = new HttpHeaders();
