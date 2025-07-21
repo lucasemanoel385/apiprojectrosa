@@ -25,7 +25,7 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cod;
 	private String reference;
-	private byte[] img;
+	private String url;
 	private String name;
 	private String replacementValue;
 	private Long quantity;
@@ -34,10 +34,10 @@ public class Item {
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Category category;
 	
-	public Item(RegisterItem data, Long idCategory, byte[] img) {
-		this.img = img;
+	public Item(RegisterItem data, Long idCategory, byte[] img, String nameFile) {
 		this.reference = data.reference();
 		this.name = data.name();
+		this.url = nameFile;
 		this.replacementValue = data.replacementValue();
 		this.quantity = (long) data.amount();
 		this.category = new Category(idCategory);
@@ -54,8 +54,6 @@ public class Item {
 	public Item(Item item) {
 		this.cod = item.getCod();
 		this.name = item.getName();
-
-
 		this.quantity = item.getQuantity();
 		this.category = new Category(item.getCategory().getId());
 	}

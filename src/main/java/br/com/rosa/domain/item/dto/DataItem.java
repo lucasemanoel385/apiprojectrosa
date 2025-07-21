@@ -9,15 +9,15 @@ public record DataItem(
 		Long cod,
 		String reference,
 		String name,
+		String url,
 		String replacementValue,
 		Long amount,
-		Category category,
-		String imagem) {
+		Category category) {
 	
-	public DataItem(Item item, String imagem) {
-		this(item.getCod(), item.getReference(),item.getName(),
+	public DataItem(Item item) {
+		this(item.getCod(), item.getReference(),item.getName(), item.getUrl(),
 				item.getReplacementValue(),
-				item.getQuantity(), item.getCategory(), imagem);
+				item.getQuantity(), item.getCategory());
 		
 	}
 }

@@ -4,6 +4,7 @@ import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import br.com.rosa.infra.exceptions.ValidationException;
+import br.com.rosa.tool.ImgSaveAndGet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import br.com.rosa.domain.item.RepositoryItem;
 import br.com.rosa.domain.item.dto.UpdateItem;
 import br.com.rosa.domain.item.dto.DataItem;
 import br.com.rosa.domain.item.dto.RegisterItem;
+
+import java.io.IOException;
 
 @Service
 public class ItemService {
@@ -36,9 +39,17 @@ public class ItemService {
 		var category = repositoryCategory.getReferenceByName(dados.category());
 
 		var imgBytes = TransformAndResizeImage.saveImgItem(file);
-		
-		//Salva o item no banco de dados
-		var item = new Item(dados, category.getId(), imgBytes);
+
+		String nameFile;
+
+		try {
+			nameFile = ImgSaveAndGet.saveImagemInFolder(file);
+		} catch (IOException e) {
+            throw new ValidationException(e.getMessage() + "Erro ao salvar imagem.");
+        }
+
+        //Salva o item no banco de dados
+		var item = new Item(dados, category.getId(), imgBytes, nameFile);
 		repository.save(item);
 		return item;
 	}
@@ -47,9 +58,7 @@ public class ItemService {
 	public DataItem getItemId(Long id) {
 		var item = repository.getReferenceById(id);
 
-		var base64Image = TransformAndResizeImage.takeImage(item.getImg());
-
-		DataItem i = new DataItem(item, base64Image);
+        DataItem i = new DataItem(item);
 
 		return i;
 	}
@@ -58,13 +67,13 @@ public class ItemService {
 
 		if (search == null || search.isEmpty()) {
 			System.out.println("teste");
-			return repository.findAll(page).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAll(page).map(i -> new DataItem(i));
 		} else if (filterSearch.equals("cod")) {
-			return repository.findAllByCode(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllByCode(page,search).map(i -> new DataItem(i));
 		} else if (filterSearch.equals("reference")){
-			return repository.findAllByReference(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllByReference(page,search).map(i -> new DataItem(i));
 		} else {
-			return repository.findAllByName(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllByName(page,search).map(i -> new DataItem(i));
 		}
 
 		/*if (search == null || search.isEmpty()) {
@@ -80,11 +89,23 @@ public class ItemService {
 
 		validate.validateUpdateItem(data, item);
 
-		checkAndUpdateNullOrBlank(item, data);
+        try {
+            ImgSaveAndGet.deleteImg(item.getUrl());
+        } catch (IOException e) {
+			throw new ValidationException("Erro ao deletar imagem da pasta.");
+        }
 
-		if(!(file == null)) {
-			item.setImg(TransformAndResizeImage.saveImgItem(file));
-		}
+		if(file != null) {
+            try {
+                var url = ImgSaveAndGet.saveImagemInFolder(file);
+				item.setUrl(url);
+				System.out.println("123456");
+            } catch (IOException e) {
+				throw new ValidationException(e.getMessage() + "Erro ao salvar imagem.");
+            }
+        }
+
+        checkAndUpdateNullOrBlank(item, data);
 
 		repository.save(item);
 
@@ -101,6 +122,11 @@ public class ItemService {
 		if(data.name() != null) {
 			item.setName(data.name());
 		}
+
+		if(data.url() != null) {
+			item.setUrl(data.url());
+		}
+
 		if(data.replacementValue() != null) {
 			item.setReplacementValue(data.replacementValue());
 		}
@@ -116,12 +142,19 @@ public class ItemService {
     public void deleteItem(Long id) {
 
 		var itensWithContract = repository.findAllContractsWithItem(id);
+		var item = repository.findById(id);
 
 		if (itensWithContract > 0) {
 			throw new ValidationException("Parece que tem um item locado no contrato. Favor remover o item do contrato antes de excluir.");
 		}
 
-		repository.deleteById(id);
+        try {
+            ImgSaveAndGet.deleteImg(item.get().getUrl());
+        } catch (IOException e) {
+            throw new ValidationException("Erro ao deletar imagem na pasta.");
+        }
+
+        repository.deleteById(id);
 
     }
 }

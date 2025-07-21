@@ -36,6 +36,7 @@ public class ItemContract {
 	private Long cod;
 	private String reference;
 	private String name;
+	private String url;
 	private double valueItemContract;
 	private String replacementValue;
 	private Long quantity;

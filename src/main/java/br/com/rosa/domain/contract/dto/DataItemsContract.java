@@ -5,14 +5,14 @@ public record DataItemsContract(
 		Long cod,
 		String reference,
 		String name,
+		String url,
 		Long amount,
 		double value,
 		double valueTotal,
-		String valueReplacement,
-		String imagem
+		String valueReplacement
 	) {
 	public DataItemsContract(DataItemsContract data) {
-		this(data.id, data.cod, data.reference(), data.name, data.amount, data.value, data.valueTotal, data.valueReplacement,data.imagem);
+		this(data.id, data.cod, data.reference(), data.name, data.url ,data.amount, data.value, data.valueTotal, data.valueReplacement);
 	}
 
 }
