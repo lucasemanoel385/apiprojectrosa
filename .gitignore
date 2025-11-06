@@ -1,35 +1,81 @@
-HELP.md
+# =========================
+# BUILD E DEPENDÊNCIAS
+# =========================
 target/
-!.mvn/wrapper/maven-wrapper.jar
+build/
+out/
 !**/src/main/**/target/
 !**/src/test/**/target/
-src/main/resources/static/**
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-### STS ###
-.apt_generated
+# =========================
+# CONFIGURAÇÕES DE FERRAMENTAS
+# =========================
+HELP.md
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
 .classpath
-.factorypath
 .project
-.settings
+.settings/
+.factorypath
 .springBeans
 .sts4-cache
+.apt_generated
 
-### IntelliJ IDEA ###
-.idea
+# =========================
+# IDEs
+# =========================
+# IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+# Eclipse / STS
+.metadata/
+bin/
+tmp/
+
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# VS Code
 .vscode/
 
+# =========================
+# SISTEMA OPERACIONAL
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# LOGS E TEMPORÁRIOS
+# =========================
+*.log
+*.tmp
+*.swp
+
+# =========================
+# CONFIGURAÇÕES LOCAIS
+# =========================
+# (ex: credenciais, configs personalizadas)
+application-local.properties
+application-dev.properties
+application-test.properties
+
+# =========================
+# ARQUIVOS ESTÁTICOS DO FRONTEND
+# =========================
+src/main/resources/static/
+src/main/resources/public/
+
+# =========================
+# BACKUP / OUTROS
+# =========================
+*.bak
+*.old
