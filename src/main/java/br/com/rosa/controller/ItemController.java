@@ -1,6 +1,7 @@
 package br.com.rosa.controller;
 
 import br.com.rosa.domain.TransformAndResizeImage;
+import br.com.rosa.domain.item.dto.ItemSummaryDTO;
 import br.com.rosa.domain.itemContract.RepositoryItemContract;
 import br.com.rosa.domain.itemContract.dto.DataItemReservedWeek;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class ItemController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Page<DataItem>> getItens(
+	public ResponseEntity<Page<ItemSummaryDTO>> getItens(
 			@PageableDefault(page = 0 ,sort = "cod",size = 5, direction = Direction.ASC) Pageable page,
 			@RequestParam(required = false) String search, @RequestParam(required = false) String filterCategorySearch) {
 
@@ -65,11 +66,10 @@ public class ItemController {
 	}
 
 	@GetMapping("filter")
-	public ResponseEntity<Page<DataItem>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 50) Pageable page
-														,@RequestParam String filter) {
+	public ResponseEntity<Page<ItemSummaryDTO>> getItensFilter(@PageableDefault(sort = "name", direction = Direction.ASC, size = 50) Pageable page
+														, @RequestParam String filter) {
 
-		var listItens = repository.findAllByNameOrCodeOrReference(page, filter)
-				.map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+		var listItens = repository.findAllByNameOrCodeOrReference(page, filter);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -95,7 +95,7 @@ public class ItemController {
 
 		var item = service.updateItem(dados, file);
 		
-		return ResponseEntity.ok().body(new DataItem(item, TransformAndResizeImage.takeImage(item.getImg())));
+		return ResponseEntity.ok().body(new DataItem(item));
 		
 	}
 	

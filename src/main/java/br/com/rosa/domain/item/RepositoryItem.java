@@ -1,5 +1,6 @@
 package br.com.rosa.domain.item;
 
+import br.com.rosa.domain.item.dto.ItemSummaryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,17 +14,52 @@ public interface RepositoryItem extends JpaRepository<Item, Long>{
 
     boolean existsByCod(Long cod);
 
-    @Query(value = "select * from itens where reference = :search or cod = :search or name like :search%", nativeQuery = true)
-    Page<Item> findAllByNameOrCodeOrReference(Pageable page, String search);
+    @Query(value = """
+    SELECT i.cod, i.name, i.reference, i.replacement_value, i.quantity
+    FROM itens i 
+    WHERE i.reference = :search OR i.cod = :search OR i.name LIKE CONCAT(:search, '%')
+    """,
+            countQuery = """
+    SELECT count(*) FROM itens i 
+    WHERE i.reference = :search OR i.cod = :search OR i.name LIKE CONCAT(:search, '%')
+    """,
+            nativeQuery = true)
+    Page<ItemSummaryDTO> findAllByNameOrCodeOrReference(Pageable page, String search);
 
-    @Query(value = "select * from itens where reference = :search", nativeQuery = true)
-    Page<Item> findAllByReference(Pageable page, String search);
+    @Query("""
+    SELECT i.cod AS cod, i.reference AS reference, i.name AS name, 
+           i.replacementValue AS replacementValue, i.quantity AS quantity, 
+           i.category AS category
+    FROM Item i
+    WHERE i.reference = :search
+    """)
+    Page<ItemSummaryDTO> findAllByReference(Pageable page, String search);
 
-    @Query(value = "select * from itens where cod = :search", nativeQuery = true)
-    Page<Item> findAllByCode(Pageable page, String search);
+    @Query("""
+    SELECT i.cod AS cod, i.reference AS reference, i.name AS name, 
+           i.replacementValue AS replacementValue, i.quantity AS quantity, 
+           i.category AS category
+    FROM Item i
+    WHERE i.cod = :search
+    """)
+    Page<ItemSummaryDTO> findAllByCode(Pageable page, String search);
 
-    @Query(value = "select * from itens where name like :search%", nativeQuery = true)
-    Page<Item> findAllByName(Pageable page, String search);
+    @Query("""
+    SELECT i.cod AS cod, i.reference AS reference, i.name AS name, 
+           i.replacementValue AS replacementValue, i.quantity AS quantity, 
+           i.category AS category
+    FROM Item i
+    WHERE i.name LIKE CONCAT(:search, '%')
+    """)
+    Page<ItemSummaryDTO> findAllByName(Pageable page, String search);
+
+    @Query("""
+    SELECT i.cod AS cod, i.reference AS reference, i.name AS name,
+           i.replacementValue AS replacementValue, i.quantity AS quantity,
+           i.category AS category
+    FROM Item i
+    """)
+    Page<ItemSummaryDTO> findAllItems(Pageable page);
 
     boolean existsByName(String name);
 
@@ -39,4 +75,7 @@ public interface RepositoryItem extends JpaRepository<Item, Long>{
             "WHERE ic.cod = :id",
             nativeQuery = true)
     Long findAllContractsWithItem(Long id);
+
+    @Query("SELECT i.img FROM Item i WHERE i.cod = :cod")
+    byte[] getImgByCod(Long cod);
 }

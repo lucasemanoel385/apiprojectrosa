@@ -10,14 +10,13 @@ public record DataItem(
 		String reference,
 		String name,
 		String replacementValue,
-		Long amount,
-		Category category,
-		String imagem) {
+		Long quantity,
+		Category category) {
 	
-	public DataItem(Item item, String imagem) {
+	public DataItem(Item item) {
 		this(item.getCod(), item.getReference(),item.getName(),
 				item.getReplacementValue(),
-				item.getQuantity(), item.getCategory(), imagem);
+				item.getQuantity(), item.getCategory());
 		
 	}
 }

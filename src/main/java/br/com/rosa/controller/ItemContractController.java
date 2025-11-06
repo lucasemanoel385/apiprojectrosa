@@ -46,17 +46,15 @@ public class ItemContractController {
                 repositoryItemContract.findFilteredItensWithContractIdNotDate(page,
                         data.search(), LocalDate.now(), String.valueOf(SituationContract.RESERVADO)).map(item -> {
                             var check = checkItemIfAvaible.validate(item, data);
-                            Item itemRepo = repositoryItem.getReferenceByCod(item.getCod());
 
-                            return new ItemsAvailableDTO(item, check, TransformAndResizeImage.takeImage(itemRepo.getImg()));
+                            return new ItemsAvailableDTO(item, check);
                         })
                 :
                 repositoryItemContract.findAllItemsReservedInDateWithContract(page,
                 data.search(), data.dateStart(), data.dateFinal(), String.valueOf(SituationContract.RESERVADO)).map(item -> {
                     var check = checkItemIfAvaible.validate(item, data);
-                    Item itemRepo = repositoryItem.getReferenceByCod(item.getCod());
 
-                    return new ItemsAvailableDTO(item, check, TransformAndResizeImage.takeImage(itemRepo.getImg()));
+                    return new ItemsAvailableDTO(item, check);
                 });
 
         HttpHeaders headers = new HttpHeaders();

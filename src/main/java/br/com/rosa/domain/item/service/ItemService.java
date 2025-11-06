@@ -2,6 +2,7 @@ package br.com.rosa.domain.item.service;
 
 import br.com.rosa.domain.TransformAndResizeImage;
 import br.com.rosa.domain.categoryItem.RepositoryCategory;
+import br.com.rosa.domain.item.dto.ItemSummaryDTO;
 import br.com.rosa.domain.item.validation.ValidateIfExists;
 import br.com.rosa.infra.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,24 +48,20 @@ public class ItemService {
 	public DataItem getItemId(Long id) {
 		var item = repository.getReferenceById(id);
 
-		var base64Image = TransformAndResizeImage.takeImage(item.getImg());
-
-		DataItem i = new DataItem(item, base64Image);
-
-		return i;
+		return new DataItem(item);
 	}
 
-	public Page<DataItem> listItems(Pageable page, String search, String filterSearch) {
+	public Page<ItemSummaryDTO> listItems(Pageable page, String search, String filterSearch) {
 
 		if (search == null || search.isEmpty()) {
 			System.out.println("teste");
-			return repository.findAll(page).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllItems(page);
 		} else if (filterSearch.equals("cod")) {
-			return repository.findAllByCode(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllByCode(page,search);
 		} else if (filterSearch.equals("reference")){
-			return repository.findAllByReference(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllByReference(page,search);
 		} else {
-			return repository.findAllByName(page,search).map(i -> new DataItem(i,TransformAndResizeImage.takeImage(i.getImg())));
+			return repository.findAllByName(page,search);
 		}
 
 		/*if (search == null || search.isEmpty()) {
